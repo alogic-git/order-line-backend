@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# @author : Mak Sophea
+# @version : 1.0#
+# Create a regex for a conventional commit.
+commit_types="(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|wip)"
+conventional_commit_regex="^${commit_types}(\([a-z \-]+\))?!?: .+$"
+merge_commit_regex="^(Merge) branch .+$"
+# Get the commit message (the parameter we're given is just the path to the
+# temporary file which holds the message).
+commit_message=$(cat "$1")
+
+# Check the message, if we match, all good baby.
+if [[ "$commit_message" =~ $merge_commit_regex ]]; then
+  echo "merge commit"
+  exit 0
+fi
+
+if [[ "$commit_message" =~ $conventional_commit_regex ]]; then
+  echo "[[ Commit message meets Conventional Commit standards ]]"
+  exit 0
+fi
+
+# Uh-oh, this is not a conventional commit, show an example and link to the spec.
+echo "[[The commit message does not meet the Conventional Commit standard]]"
+echo "More details at: https://www.notion.so/alogic/Commit-Convention-5c2500d317824c50a15054a6ff4d011a"
+echo "***********************************************************************"
+echo "Here are the list of message type : ${commit_types}"
+echo "<type>: <subject> max 50char "
+echo "  >>> ex) fix: invalid request for login api"
+echo "<type(<scope>):> <subject> (Max 50 char) - <scope> is option "
+echo "  >>> ex) fix(user): email address is empty on profile api"
+echo "***********************************************************************"
+
+exit 1
