@@ -1,10 +1,9 @@
 package com.orderline.notice.model.dto;
 
-import com.orderline.branch.model.entity.BranchUserRole;
-import com.orderline.common.user.model.entity.User;
 import com.orderline.notice.enums.NotificationStatusTypeEnum;
 import com.orderline.notice.enums.NotificationTypeEnum;
 import com.orderline.notice.model.entity.NotificationHistory;
+import com.orderline.user.model.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +20,8 @@ public class NotificationHistoryDto {
         @ApiModelProperty(value = "Notification ID")
         private Long id;
 
-        @ApiModelProperty(value = "Branch ID")
-        private Long branchId;
+//        @ApiModelProperty(value = "Branch ID")
+//        private Long branchId;
 
         @ApiModelProperty(value = "Target User ID")
         private Long targetUserId;
@@ -60,7 +59,7 @@ public class NotificationHistoryDto {
         public static ResponseNotificationDto toDto(NotificationHistory notificationHistory){
             return ResponseNotificationDto.builder()
                     .id(notificationHistory.getId())
-                    .branchId(notificationHistory.getBranch().getId())
+                    //.branchId(notificationHistory.getBranch().getId())
                     .targetUserId(notificationHistory.getTargetUserId())
                     .messageId(notificationHistory.getMessageId())
                     .originalTableName(notificationHistory.getOriginalTableName())
@@ -76,7 +75,7 @@ public class NotificationHistoryDto {
         public static ResponseNotificationDto toDto(NotificationHistory notificationHistory, Integer others, Integer failCount){
             return ResponseNotificationDto.builder()
                     .id(notificationHistory.getId())
-                    .branchId(notificationHistory.getBranch().getId())
+                    //.branchId(notificationHistory.getBranch().getId())
                     .targetUserId(notificationHistory.getTargetUserId())
                     .messageId(notificationHistory.getMessageId())
                     .originalTableName(notificationHistory.getOriginalTableName())
@@ -157,17 +156,6 @@ public class NotificationHistoryDto {
                     .build();
         }
 
-        public static ResponseMessageUserDto toUserDto(BranchUserRole branchUserRole){
-            return ResponseMessageUserDto.builder()
-                    .userId(branchUserRole.getUser().getId())
-                    .phone(branchUserRole.getUser().getPhone())
-                    .username(branchUserRole.getUser().getName().length() < 4
-                            ? branchUserRole.getUser().getName().substring(0, branchUserRole.getUser().getName().length() - 1) + "*"
-                            : branchUserRole.getUser().getName().substring(0, branchUserRole.getUser().getName().length() - 2) + "**"
-                    )
-                    .name(branchUserRole.getUser().getName())
-                    .build();
-        }
     }
 
     @Getter

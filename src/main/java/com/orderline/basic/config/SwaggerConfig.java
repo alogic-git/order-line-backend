@@ -24,12 +24,12 @@ import java.util.function.Predicate;
 public class SwaggerConfig {
   private static final String TITLE = "ORDERLINE";
   private static final String VERSION = "0.0.1";
-  private static final String DESCRIPTION = "orderline api\n" +
-          "sample tutor/tutee token:\n" +
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjMiLCJyb2xlIjoiTUFOQUdFUiIsImJyYW5jaElkIjo5OCwiaWF0IjoxNjk5NDIyMzkzLCJleHAiOjE3MDcxOTgzOTN9.Qlj9L7PZltpdSdEQz4nrPobRfzOdYC_Xg-gSHo5Hgx8\n" +
-          "sample tutee(상현2825) id: 266 \n" +
-          "token: \n " +
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjYiLCJyb2xlIjoiVFVURUUiLCJicmFuY2hJZCI6OTgsImlhdCI6MTcwMDE4ODY2MiwiZXhwIjoxNzA3OTY0NjYyfQ.qYFFbsg2eaRWquNcbkUqaf4pNOZrmETf9ESrRDq6Iy4";
+  private static final String DESCRIPTION = "orderline api\n"; //+
+//          "sample tutor/tutee token:\n" +
+//          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjMiLCJyb2xlIjoiTUFOQUdFUiIsImJyYW5jaElkIjo5OCwiaWF0IjoxNjk5NDIyMzkzLCJleHAiOjE3MDcxOTgzOTN9.Qlj9L7PZltpdSdEQz4nrPobRfzOdYC_Xg-gSHo5Hgx8\n" +
+//          "sample tutee(상현2825) id: 266 \n" +
+//          "token: \n " +
+//          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjYiLCJyb2xlIjoiVFVURUUiLCJicmFuY2hJZCI6OTgsImlhdCI6MTcwMDE4ODY2MiwiZXhwIjoxNzA3OTY0NjYyfQ.qYFFbsg2eaRWquNcbkUqaf4pNOZrmETf9ESrRDq6Iy4";
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean

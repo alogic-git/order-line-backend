@@ -49,33 +49,33 @@ public class NotificationHistoryController {
         return NotificationHistoryDto.ResponseNotificationListDto.build(notificationHistoryPage, page, maxResults);
     }
 
-    @ApiOperation(value = "알림 받은 회원조회", notes = "알림을 받은 사용자를 조회 합니다.")
-    @GetMapping("{notificationId}/user")
-    public NotificationHistoryDto.ResponseMessageUserListDto getMessageUserList(
-            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer page,
-            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = "10") Integer maxResults,
-            @ApiParam(value = "알림 id", required = true, defaultValue = "0") @PathVariable(required = true) Long notificationId,
-            @ApiParam(value = "알림 상태", required = false, defaultValue = "ALL") @RequestParam(required = false) NotificationStatusTypeEnum notificationStatusType
-    ){
-        Pageable pageable = PageRequest.of(page, maxResults);
+//    @ApiOperation(value = "알림 받은 회원조회", notes = "알림을 받은 사용자를 조회 합니다.")
+//    @GetMapping("{notificationId}/user")
+//    public NotificationHistoryDto.ResponseMessageUserListDto getMessageUserList(
+//            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer page,
+//            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = "10") Integer maxResults,
+//            @ApiParam(value = "알림 id", required = true, defaultValue = "0") @PathVariable(required = true) Long notificationId,
+//            @ApiParam(value = "알림 상태", required = false, defaultValue = "ALL") @RequestParam(required = false) NotificationStatusTypeEnum notificationStatusType
+//    ){
+//        Pageable pageable = PageRequest.of(page, maxResults);
+//
+//        //Page<NotificationHistoryDto.ResponseMessageUserDto> notificationMessageUserList= notificationHistoryService.getMessageUserList(notificationId, notificationStatusType, pageable);
+//
+//        return NotificationHistoryDto.ResponseMessageUserListDto.build(notificationMessageUserList, page, maxResults);
+//    }
 
-        Page<NotificationHistoryDto.ResponseMessageUserDto> notificationMessageUserList= notificationHistoryService.getMessageUserList(notificationId, notificationStatusType, pageable);
-
-        return NotificationHistoryDto.ResponseMessageUserListDto.build(notificationMessageUserList, page, maxResults);
-    }
-
-    @ApiOperation(value = "지점 내 전송 가능한 사용자 목록 조회", notes = "지점 내 전송 가능한 사용자 목록 조회")
-    @GetMapping("user/{scheduleId}")
-    public NotificationHistoryDto.ResponseMessageUserListDto getUserListByScheduleId(
-            HttpServletRequest httpServletRequest,
-            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer page,
-            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = "10") Integer maxResults,
-            @ApiParam(value = "일정 ID") @RequestParam(required = false) Long scheduleId
-    ){
-        Pageable pageable = PageRequest.of(page, maxResults);
-
-        Page<NotificationHistoryDto.ResponseMessageUserDto> notificationDtoPage = notificationHistoryService.getUserListByScheduleId(scheduleId, pageable);
-
-        return NotificationHistoryDto.ResponseMessageUserListDto.build(notificationDtoPage, page, maxResults);
-    }
+//    @ApiOperation(value = "지점 내 전송 가능한 사용자 목록 조회", notes = "지점 내 전송 가능한 사용자 목록 조회")
+//    @GetMapping("user/{scheduleId}")
+//    public NotificationHistoryDto.ResponseMessageUserListDto getUserListByScheduleId(
+//            HttpServletRequest httpServletRequest,
+//            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer page,
+//            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = "10") Integer maxResults,
+//            @ApiParam(value = "일정 ID") @RequestParam(required = false) Long scheduleId
+//    ){
+//        Pageable pageable = PageRequest.of(page, maxResults);
+//
+//        Page<NotificationHistoryDto.ResponseMessageUserDto> notificationDtoPage = notificationHistoryService.getUserListByScheduleId(scheduleId, pageable);
+//
+//        return NotificationHistoryDto.ResponseMessageUserListDto.build(notificationDtoPage, page, maxResults);
+//    }
 }
