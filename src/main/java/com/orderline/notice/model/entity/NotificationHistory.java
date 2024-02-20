@@ -1,6 +1,5 @@
 package com.orderline.notice.model.entity;
 
-import com.orderline.branch.model.entity.Branch;
 import com.orderline.notice.enums.NotificationStatusTypeEnum;
 import com.orderline.notice.enums.NotificationTypeEnum;
 import lombok.AllArgsConstructor;
@@ -27,9 +26,9 @@ public class NotificationHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "branch_id")
+//    private Branch branch;
 
     @Column(name = "target_user_id")
     private Long targetUserId;
