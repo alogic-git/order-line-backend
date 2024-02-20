@@ -1,7 +1,6 @@
 package com.orderline.basic.model.dto;
 
 import com.orderline.basic.enums.ImageType;
-import com.orderline.klass.enums.KlassColorTypeEnum;
 import lombok.*;
 
 public class CommonDto {
@@ -38,22 +37,5 @@ public class CommonDto {
         private String attr4;
     }
 
-    @Getter
-    @Builder
-    public static class ColorCodeDto{
-        private KlassColorTypeEnum colorCode;
-        private String colorName;
-        private String mainColor;
-        private String textColor;
-
-        public static ColorCodeDto toDto(KlassColorTypeEnum klassColorTypeEnum){
-            return ColorCodeDto.builder()
-                    .colorCode(klassColorTypeEnum)
-                    .colorName(klassColorTypeEnum.getText())
-                    .mainColor(klassColorTypeEnum.getMainColor())
-                    .textColor(klassColorTypeEnum.getTextColor())
-                    .build();
-        }
-    }
 
 }

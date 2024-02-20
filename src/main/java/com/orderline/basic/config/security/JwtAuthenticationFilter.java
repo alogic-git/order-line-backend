@@ -30,12 +30,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             Authentication auth = jwtTokenProvider.getAuthentication(userPk);
             SecurityContextHolder.getContext().setAuthentication(auth);
             request.setAttribute("userId", Long.valueOf(userPk));
-            request.setAttribute("role", jwtTokenProvider.getUserRole(token));
-            if(jwtTokenProvider.getBranchId(token) != null) {
-                request.setAttribute("branchId", jwtTokenProvider.getBranchId(token).get());
-            } else {
-                request.setAttribute("branchId", jwtTokenProvider.getBranchId(token));
-            }
+            //request.setAttribute("role", jwtTokenProvider.getUserRole(token));
+//            if(jwtTokenProvider.getBranchId(token) != null) {
+//                request.setAttribute("branchId", jwtTokenProvider.getBranchId(token).get());
+//            } else {
+//                request.setAttribute("branchId", jwtTokenProvider.getBranchId(token));
+//            }
         }
 
         filterChain.doFilter(request, response);

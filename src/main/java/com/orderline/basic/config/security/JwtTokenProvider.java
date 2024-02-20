@@ -1,7 +1,5 @@
 package com.orderline.basic.config.security;
 
-import com.orderline.common.user.enums.UserRoleEnum;
-import com.orderline.common.user.model.dto.UserDto;
 import io.jsonwebtoken.*;
 import com.orderline.basic.config.Env;
 import lombok.RequiredArgsConstructor;
@@ -38,20 +36,20 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     }
 
     // Jwt 토큰 생성
-    public String createAccessToken(String userPk, UserDto.RoleDto userRoleDto) {
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("role", userRoleDto.getRoleType());
-        if(userRoleDto.getBranchId() > 0L) {
-            claims.put("branchId", userRoleDto.getBranchId());
-        }
-        Date now = new Date();
-        return Jwts.builder()
-                .setClaims(claims) // 데이터
-                .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) // set Expire Time
-                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
-                .compact();
-    }
+//    public String createAccessToken(String userPk, UserDto.RoleDto userRoleDto) {
+//        Claims claims = Jwts.claims().setSubject(userPk);
+//        claims.put("role", userRoleDto.getRoleType());
+//        if(userRoleDto.getBranchId() > 0L) {
+//            claims.put("branchId", userRoleDto.getBranchId());
+//        }
+//        Date now = new Date();
+//        return Jwts.builder()
+//                .setClaims(claims) // 데이터
+//                .setIssuedAt(now) // 토큰 발행일자
+//                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) // set Expire Time
+//                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
+//                .compact();
+//    }
     public String createRefreshToken() {
         Date now = new Date();
         return Jwts.builder()
@@ -83,44 +81,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
         return userPk;
     }
 
-    public String getUserRole(String token) {
-        String role;
-        try {
-            role = (String) Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token)
-                    .getBody().get("role");
-        }
-        catch(ExpiredJwtException e) {
-            role = UserRoleEnum.GENERAL.getId();
-            return role;
-        }
 
-        return role;
-    }
-
-    public Optional<Long> getBranchId(String token) {
-        Object branchId = parsingBranchId(token);
-        if (branchId instanceof Integer) {
-            return Optional.of(((Integer) branchId).longValue());
-        } else {
-            return (Optional<Long>) branchId;
-        }
-    }
-
-    public Object parsingBranchId(String token) {
-        Object branchId;
-        try {
-            branchId = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token)
-                    .getBody().get("branchId");
-        }
-        catch(ExpiredJwtException e) {
-            return null;
-        }
-        return branchId;
-    }
 
     public Long getExpiresIn(String token) {
         Date now = new Date();
