@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
 
-
     @LastModifiedBy
     @Column(name = "mod_user_id")
     private Long modUserId;
@@ -33,6 +32,7 @@ public abstract class BaseTimeEntity {
 
     @Column(name = "delete_yn")
     protected Boolean deleteYn = false;
+
     public void createDateTime(LocalDateTime regDateTime) {
         this.regDateTime = regDateTime;
     }
