@@ -33,41 +33,28 @@ public class SwaggerConfig {
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean
-  public Docket staffApi() {
+  public Docket userApi() {
     return new Docket(DocumentationType.SWAGGER_2)
-            .groupName("staff")
+            .groupName("user")
             .apiInfo(apiInfo())
             .securityContexts(Collections.singletonList(securityContext()))
             .securitySchemes(Collections.singletonList(apiKey()))
             .select()
             .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
-            .paths(PathSelectors.ant("/manager/**").or(PathSelectors.ant("/tutor/**")))
+            .paths(PathSelectors.ant("/user/**"))
             .build();
   }
 
   @Bean
-  public Docket tuteeApi() {
+  public Docket adminApi() {
     return new Docket(DocumentationType.SWAGGER_2)
-            .groupName("tutee")
+            .groupName("admin")
             .apiInfo(apiInfo())
             .securityContexts(Collections.singletonList(securityContext()))
             .securitySchemes(Collections.singletonList(apiKey()))
             .select()
             .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
-            .paths(PathSelectors.ant("/tutee/**"))
-            .build();
-  }
-
-  @Bean
-  public Docket commonApi() {
-    return new Docket(DocumentationType.SWAGGER_2)
-            .groupName("common")
-            .apiInfo(apiInfo())
-            .securityContexts(Collections.singletonList(securityContext()))
-            .securitySchemes(Collections.singletonList(apiKey()))
-            .select()
-            .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
-            .paths(PathSelectors.ant("/common/**").or(not(PathSelectors.ant("/tutee/**").or(PathSelectors.ant("/manager/**")).or(PathSelectors.ant("/tutor/**")))))
+            .paths(PathSelectors.ant("/admin/**").or(not(PathSelectors.ant("/user/**").or(PathSelectors.ant("/auth/**")))))
             .build();
   }
 

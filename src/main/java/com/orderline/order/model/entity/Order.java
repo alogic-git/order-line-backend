@@ -1,6 +1,7 @@
 package com.orderline.order.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
+import com.orderline.order.enums.OrderStatusEnum;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,9 +25,6 @@ public class Order extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
     private String address;
 
     private String specifics;
@@ -40,15 +38,17 @@ public class Order extends BaseTimeEntity {
     @Column(name = "total_price")
     private int totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatusEnum status;
+
+    @Column(name = "request_dt")
+    private ZonedDateTime requestDt;
+
     @Column(name = "order_dt")
     private ZonedDateTime orderDt;
 
     public void deleteOrder(){
         this.deleteYn = true;
-    }
-
-    public void updateName(String name){
-        this.name = name;
     }
 
     public void updateAddress(String address){

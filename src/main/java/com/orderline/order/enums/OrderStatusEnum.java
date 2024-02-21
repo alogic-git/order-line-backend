@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OrderStatusEnum implements EnumType {
 
-    GENERAL("진행중"),
-    SNS("진행완료");
+    ONGOING("진행중"),
+    COMPLETED("완료");
 
     private final String text;
 

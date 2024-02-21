@@ -2,9 +2,25 @@ package com.orderline.user.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.site.model.entity.Site;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
+@DynamicUpdate
+@DynamicInsert    //null field 지워줌
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Builder
+@Getter
+@Where(clause = "delete_yn = 0")
+@Table(name="user_site")
 public class UserSite extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

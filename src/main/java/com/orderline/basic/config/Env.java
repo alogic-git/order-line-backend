@@ -37,15 +37,6 @@ public class Env {
         return envProperties.getSms().getPhone();
     }
 
-    public static String naverClientId() {
-        return envProperties.getNaver().getClientId();
-    }
-
-    public static String naverClientSecret() {
-        return envProperties.getNaver().getClientSecret();
-    }
-
-
     @Component
     @ConfigurationProperties(prefix="env")
     @Getter
@@ -57,20 +48,12 @@ public class Env {
 
         private Sms sms;
 
-        private Naver naver;
-
         @Data
         private static class Sms {
             private String apiKey;
             private String accessKey;
             private String secretKey;
             private String phone;
-        }
-
-        @Data
-        private static class Naver {
-            private String clientId;
-            private String clientSecret;
         }
 
     }
