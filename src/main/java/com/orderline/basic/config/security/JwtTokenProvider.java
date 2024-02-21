@@ -36,20 +36,20 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     }
 
     // Jwt 토큰 생성
-//    public String createAccessToken(String userPk, UserDto.RoleDto userRoleDto) {
-//        Claims claims = Jwts.claims().setSubject(userPk);
+    public String createAccessToken(String userPk) {
+        Claims claims = Jwts.claims().setSubject(userPk);
 //        claims.put("role", userRoleDto.getRoleType());
 //        if(userRoleDto.getBranchId() > 0L) {
 //            claims.put("branchId", userRoleDto.getBranchId());
 //        }
-//        Date now = new Date();
-//        return Jwts.builder()
-//                .setClaims(claims) // 데이터
-//                .setIssuedAt(now) // 토큰 발행일자
-//                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) // set Expire Time
-//                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
-//                .compact();
-//    }
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims) // 데이터
+                .setIssuedAt(now) // 토큰 발행일자
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) // set Expire Time
+                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
+                .compact();
+    }
     public String createRefreshToken() {
         Date now = new Date();
         return Jwts.builder()

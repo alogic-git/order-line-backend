@@ -22,9 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		log.info("addInterceptor");
 		registry.addInterceptor(permissionInterceptor)
-				.addPathPatterns("/manager/**")
-				.addPathPatterns("/tutor/**")
-				.addPathPatterns("/tutee/**")
-				.excludePathPatterns("/**/branch/**"); // branch 의 경우 role 만 체크
+				.addPathPatterns("/admin/**")
+				.addPathPatterns("/user/**");
 	}
 }

@@ -1,7 +1,6 @@
 package com.orderline.site.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
-import com.orderline.material.model.entity.Material;
 import com.orderline.order.model.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
