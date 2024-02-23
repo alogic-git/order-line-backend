@@ -1,5 +1,7 @@
 package com.orderline.basic.config.security;
 
+import com.orderline.user.enums.UserRoleEnum;
+import com.orderline.user.model.dto.UserDto;
 import io.jsonwebtoken.*;
 import com.orderline.basic.config.Env;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
 
     private String secretKey = Env.jwtSecret();
-//    private String secretKey = "aaaaaaaaaa";
+    //private String secretKey = "aaaaaaaaaa";
 
     private static final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 90; // accessToken 3개월 유효
     private static final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 180; // refreshToken 6개월 유효
@@ -36,14 +38,12 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     }
 
     // Jwt 토큰 생성
-    public String createAccessToken(String userPk) {
+    public String createAccessToken(String userPk, UserDto.RoleDto userRoleDto) {
         Claims claims = Jwts.claims().setSubject(userPk);
-//        claims.put("role", userRoleDto.getRoleType());
-//        if(userRoleDto.getBranchId() > 0L) {
-//            claims.put("branchId", userRoleDto.getBranchId());
-//        }
+        claims.put("role", userRoleDto.getRoleType());
         Date now = new Date();
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) // set Expire Time
@@ -53,6 +53,7 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     public String createRefreshToken() {
         Date now = new Date();
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() +REFRESH_TOKEN_VALID_MILLISECOND))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -81,6 +82,21 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
         return userPk;
     }
 
+    public String getUserRole(String token) {
+        String role;
+        try {
+            role = (String) Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody().get("role");
+        }
+        catch(ExpiredJwtException e) {
+            role = UserRoleEnum.USER.getId();
+            return role;
+        }
+
+        return role;
+    }
 
 
     public Long getExpiresIn(String token) {

@@ -5,6 +5,7 @@ import com.orderline.user.model.dto.UserDto;
 import com.orderline.user.model.dto.UserTokenDto;
 import com.orderline.user.model.entity.UserToken;
 import com.orderline.user.repository.UserTokenRepository;
+import com.orderline.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class AuthService {
 
     @Resource(name = "jwtTokenProvider")
     JwtTokenProvider jwtTokenProvider;
+
+    @Resource(name = "customUserDetailsService")
+    CustomUserDetailsService customUserDetailsService;
 
     public UserTokenDto.UserTokenInfoDto getUserToken(String refreshToken) {
         UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(refreshToken).orElse(null);
@@ -43,7 +47,8 @@ public class AuthService {
     @Transactional
     public UserDto.ResponseUserInfoWithAuthDto reissueJwt(UserDto.UserInfoDto userInfoDto, UserTokenDto.UserTokenInfoDto userTokenDto) {
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(String.valueOf(userTokenDto.getUser().getUserId()));
+        UserDto.RoleDto userRoleDto = customUserDetailsService.getUserRoleById(userTokenDto.getUser().getUserId());
+        String newAccessToken = jwtTokenProvider.createAccessToken(String.valueOf(userTokenDto.getUser().getUserId()), userRoleDto);
         String newRefreshToken = jwtTokenProvider.createRefreshToken();
         Long expiresIn = jwtTokenProvider.getExpiresIn(newAccessToken);
 

@@ -29,6 +29,9 @@ public class UserService {
     @Resource(name = "userTokenRepository")
     UserTokenRepository userTokenRepository;
 
+    @Resource(name = "customUserDetailsService")
+    CustomUserDetailsService customUserDetailsService;
+
     @Resource(name = "awsS3Service")
     AwsS3Service awsS3Service;
 
@@ -45,7 +48,8 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userInfoDto.getUserId());
         if(!userOptional.isPresent()) return null;
 
-        String accessToken = jwtTokenProvider.createAccessToken(String.valueOf(userInfoDto.getUserId()));
+        UserDto.RoleDto userRoleDto = customUserDetailsService.getUserRoleById(userInfoDto.getUserId());
+        String accessToken = jwtTokenProvider.createAccessToken(String.valueOf(userInfoDto.getUserId()), userRoleDto);
         String refreshToken = jwtTokenProvider.createRefreshToken();
         Long expiresIn = jwtTokenProvider.getExpiresIn(accessToken);
 
