@@ -58,21 +58,20 @@ public class UserController {
 //        return ApiResponseDto.createException("사용 가능한 ID 입니다.", true);
 //    }
 //
-//    @ApiOperation(value = "회원 가입", notes = "회원 가입을 합니다.")
-//    @PostMapping("/signup")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public UserDto.ResponseUserInfoWithAuthDto doSignUp(
-//            @RequestBody @Valid UserDto.RequestUserSignUpDto signUpDto) {
-//
-//        //아이디 중복체크
-//        Long userId = userService.getUserInfoByUsername(signUpDto.getUsername());
-//        if(userId > 0L) throw new InternalServerErrorException("이미 가입된 ID 입니다.");
-//        //휴대폰 인증 여부 확인
-//        userService.checkActivation(signUpDto.getPhone());
-//        //회원가입
-//        UserDto.UserInfoDto userInfoDto = userService.doSignUp(signUpDto);
-//        //로그인
-//        return userService.doSignIn(userInfoDto);
-//
-//        }
+    @ApiOperation(value = "회원 가입", notes = "회원 가입을 합니다.")
+    @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto.ResponseUserInfoWithAuthDto doSignUp(
+            @RequestBody @Valid UserDto.RequestUserSignUpDto signUpDto) {
+
+        //아이디 중복체크
+        Long userId = userService.getUserInfoByUsername(signUpDto.getUsername());
+        if(userId > 0L) throw new InternalServerErrorException("이미 가입된 ID 입니다.");
+        //휴대폰 인증 여부 확인
+        //회원가입
+        UserDto.UserInfoDto userInfoDto = userService.doSignUp(signUpDto);
+        //로그인
+        return userService.doSignIn(userInfoDto);
+
+        }
 }

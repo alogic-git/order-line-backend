@@ -84,7 +84,7 @@ public class UserService {
 
     @Transactional
     public void doSignOut(Long userId) {
-        List<UserToken> userTokens = userTokenRepository.findByUser_Id(userId);
+        List<UserToken> userTokens = userTokenRepository.findByUserId(userId);
         for(UserToken userToken : userTokens) {
             userToken.deleteToken();
             userTokenRepository.save(userToken);
@@ -102,4 +102,25 @@ public class UserService {
         return 0L;
     }
 
+    @Transactional
+    public UserDto.UserInfoDto doSignUp(UserDto.RequestUserSignUpDto signUpDto){
+
+        signUpDto.encodePassword(passwordEncoder.encode(signUpDto.getPassword()));
+        User user = userRepository.save(signUpDto.toUserSignUpEntity());
+
+        return UserDto.UserInfoDto.toDto(user);
+    }
+
+    @Transactional
+    public Long resetPassword(UserDto.RequestResetPassword requestResetPassword) {
+
+        Optional<User> userOptional = userRepository.findByUsername(requestResetPassword.getUsername());
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            user.updatePassword(passwordEncoder.encode(requestResetPassword.getPassword()));
+            return userRepository.save(user).getId();
+        }
+
+        throw new NotFoundException("해당 회원이 존재하지 않습니다.");
+    }
 }

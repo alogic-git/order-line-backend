@@ -12,6 +12,6 @@ public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
 
     Optional<UserToken> findFirstByRefreshTokenOrderByIdDesc(String refreshToken);
 
-    List<UserToken> findByUser_Id(Long userId);
+    List<UserToken> findByUserId(Long userId);
 
 }
