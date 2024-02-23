@@ -55,17 +55,17 @@ public class NoticeDto {
         public static ResponseNoticeDto toDto(Notice notice){
             return ResponseNoticeDto.builder()
                     .id(notice.getId())
-                    .noticeType(notice.getNoticeType())
-                    .notificationType(notice.getNotificationType())
-                    .targetType(notice.getTargetType())
+//                    .noticeType(notice.getNoticeType())
+//                    .notificationType(notice.getNotificationType())
+//                    .targetType(notice.getTargetType())
                     .title(notice.getTitle())
                     .contents(notice.getContents())
-                    .popupDisplayYn(notice.getPopupDisplayYn())
-                    .importantYn(notice.getImportantYn())
-                    .commentYn(notice.getCommentYn())
-                    .likeYn(notice.getLikeYn())
-                    .hits(notice.getHits())
-                    .like(notice.getLike())
+//                    .popupDisplayYn(notice.getPopupDisplayYn())
+//                    .importantYn(notice.getImportantYn())
+//                    .commentYn(notice.getCommentYn())
+//                    .likeYn(notice.getLikeYn())
+//                    .hits(notice.getHits())
+//                    .like(notice.getLike())
                     .build();
         }
     }

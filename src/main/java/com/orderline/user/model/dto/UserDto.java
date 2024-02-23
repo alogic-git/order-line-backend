@@ -43,6 +43,8 @@ public class UserDto {
         @NotBlank(message = "Id를 입력해주세요.")
         private String username;
 
+        private String password;
+
         @ApiModelProperty(value = "Name")
         private String name;
 
@@ -76,6 +78,8 @@ public class UserDto {
                     .username(user.getUsername())
                     .name(user.getName())
                     .phone(user.getPhone())
+                    .joinDt(user.getJoinDt())
+                    .lastLoginDt(user.getLastLoginDt())
                     .adminYn(user.getAdminYn())
                     .build();
         }
