@@ -1,6 +1,7 @@
 package com.orderline.user.service;
 
 import com.orderline.basic.exception.NotFoundException;
+import com.orderline.user.enums.UserRoleEnum;
 import com.orderline.user.model.dto.UserDto;
 import com.orderline.user.model.entity.User;
 import com.orderline.user.repository.UserRepository;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -23,18 +23,25 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String userId) {
 
-        UserDto.UserInfoDto userInfo = getUsernameById(Long.valueOf(userId));
-        return new CustomUserDetails(userInfo);
+        UserDto.RoleDto roleDto = getUserRoleById(Long.valueOf(userId));
+        return new CustomUserDetails(roleDto);
     }
 
-    public UserDto.UserInfoDto getUsernameById(Long userId) {
+    public UserDto.RoleDto getUserRoleById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
 
-        return UserDto.UserInfoDto.builder()
-                .username(user.getUsername())
+        UserRoleEnum userRoleEnum = null;
+        if (user.getAdminYn() == Boolean.TRUE) {
+            userRoleEnum = UserRoleEnum.ADMIN;
+        } else {
+            userRoleEnum = UserRoleEnum.USER;
+        }
+
+        return UserDto.RoleDto.builder()
+                .id(userId)
                 .password(user.getPassword())
-                .adminYn(user.getAdminYn())
+                .roleType(userRoleEnum)
                 .build();
     }
 }

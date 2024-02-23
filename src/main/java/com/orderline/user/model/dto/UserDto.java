@@ -1,5 +1,6 @@
 package com.orderline.user.model.dto;
 
+import com.orderline.user.enums.UserRoleEnum;
 import com.orderline.user.model.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -18,6 +19,17 @@ public class UserDto {
 
     private static final String USERNAME_PATTERN = "[a-z0-9]{4,12}";
     private static final String PASSWORD_PATTERN = "(?=.*\\d)(?=.*[a-z])(?=.*\\W)(?=\\S+$).{8,20}";
+
+    @Getter
+    @Builder
+    public static class RoleDto {
+        private Long id;
+
+        private String password;
+
+        @ApiModelProperty(value = "유저 역할")
+        private UserRoleEnum roleType;
+    }
 
     @Getter
     @Builder
