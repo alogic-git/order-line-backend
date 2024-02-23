@@ -11,11 +11,11 @@ import java.util.Collections;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private UserDto.UserInfoDto userDto;
+    private UserDto.RoleDto userDto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + userDto.getAdminYn()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + userDto.getRoleType().getId()));
     }
 
     @Override
@@ -25,7 +25,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return String.valueOf(userDto.getUsername());
+        return String.valueOf(userDto.getId());
     }
 
     @Override

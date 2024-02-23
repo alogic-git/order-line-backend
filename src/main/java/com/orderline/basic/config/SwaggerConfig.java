@@ -25,11 +25,8 @@ public class SwaggerConfig {
   private static final String TITLE = "ORDERLINE";
   private static final String VERSION = "0.0.1";
   private static final String DESCRIPTION = "orderline api\n" +
-            "sample user token: username = gobaebae3, name = 고배배3\n" +
-            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNzA4NjU0Mjg5LCJleHAiOjE3MTY0MzAyODl9.T9-wIj2VTIYfOlDsyjuapQBrHkxI-sXGYRFcA1ADLLs";
-//          "sample tutee(상현2825) id: 266 \n" +
-//          "token: \n " +
-//          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjYiLCJyb2xlIjoiVFVURUUiLCJicmFuY2hJZCI6OTgsImlhdCI6MTcwMDE4ODY2MiwiZXhwIjoxNzA3OTY0NjYyfQ.qYFFbsg2eaRWquNcbkUqaf4pNOZrmETf9ESrRDq6Iy4";
+            "sample user token: username = gobaebae10, name = 고배배10\n" +
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDg2NzU0ODUsImV4cCI6MTcxNjQ1MTQ4NX0.pykaq_u1df9rGZqAT0kPjejrfrUX8Bajffc3nX_4Hsg";
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean
@@ -54,7 +51,7 @@ public class SwaggerConfig {
             .securitySchemes(Collections.singletonList(apiKey()))
             .select()
             .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
-            .paths(PathSelectors.ant("/admin/**").or(not(PathSelectors.ant("/user/**").or(PathSelectors.ant("/auth/**")))))
+            .paths(PathSelectors.ant("/admin/**").or(not(PathSelectors.ant("/user/**"))))
             .build();
   }
 
