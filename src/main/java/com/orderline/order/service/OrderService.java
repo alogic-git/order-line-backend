@@ -9,6 +9,7 @@ import com.orderline.site.model.entity.SiteOrder;
 import com.orderline.site.repository.SiteOrderRepository;
 import com.orderline.site.repository.SiteRepository;
 import com.orderline.user.model.entity.User;
+import com.orderline.user.model.entity.UserSite;
 import com.orderline.user.repository.UserRepository;
 import com.orderline.user.repository.UserSiteRepository;
 import org.springframework.data.domain.Page;
@@ -17,26 +18,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     @Resource(name = "userRepository")
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Resource(name = "siteRepository")
-    private SiteRepository siteRepository;
+    SiteRepository siteRepository;
 
     @Resource(name = "siteOrderRepository")
-    private SiteOrderRepository siteOrderRepository;
+    SiteOrderRepository siteOrderRepository;
 
     @Resource(name = "userSiteRepository")
-    private UserSiteRepository userSiteRepository;
+    UserSiteRepository userSiteRepository;
 
     @Resource(name = "orderRepository")
-    private OrderRepository orderRepository;
+    OrderRepository orderRepository;
 
+    @Transactional
     public OrderDto.ResponseOrderDto createOrder(Long userId, OrderDto.RequestCreateOrderDto requestCreateOrderDto) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -50,6 +53,7 @@ public class OrderService {
                 .order(order)
                 .build();
 
+        orderRepository.save(order);
         siteOrderRepository.save(siteOrder);
 
         return OrderDto.ResponseOrderDto.toDto(order, site);
@@ -61,7 +65,7 @@ public class OrderService {
 
         List<Site> siteList = userSiteRepository.findByUserId(user.getId())
                 .stream()
-                .map(userSite -> userSite.getSite())
+                .map(UserSite::getSite)
                 .collect(Collectors.toList());
 
         List<SiteOrder> siteOrderList = siteOrderRepository.findBySiteIn(siteList);
@@ -70,8 +74,6 @@ public class OrderService {
                 .map(siteOrder -> OrderDto.ResponseOrderDto.toDto(siteOrder.getOrder(), siteOrder.getSite()))
                 .collect(Collectors.toList());
 
-        Page<OrderDto.ResponseOrderDto> orderDtoPage = new PageImpl<>(orderDtoList, pageable, orderDtoList.size());
-
-        return orderDtoPage;
+        return new PageImpl<>(orderDtoList, pageable, orderDtoList.size());
     }
 }
