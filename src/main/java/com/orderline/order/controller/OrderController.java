@@ -24,32 +24,32 @@ import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
 @RequestMapping(path = {"admin/order", "user/order"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrderController {
 
-//    @Resource(name = "orderService")
-//    OrderService orderService;
-//
-//    @ApiOperation(value = "새로운 발주 생성", notes = "새로운 발주를 생성합니다.")
-//    @PostMapping
-//    public ResponseEntity<OrderDto.ResponseOrderDto> createOrder(HttpServletRequest httpServletRequest, @RequestBody OrderDto.RequestCreateOrderDto orderDto) {
-//        Long userId = (Long) httpServletRequest.getAttribute("userId");
-//
-//        OrderDto.ResponseOrderDto responseCreateOrderDto = orderService.createOrder(userId, orderDto);
-//        String uri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-//        String createUri = uri + "/" + responseCreateOrderDto.getId();
-//
-//        return ApiResponseDto.createdResponseEntity(createUri, responseCreateOrderDto);
-//    }
-//
-//    @ApiOperation(value = "발주 목록 조회", notes = "발주 목록을 조회합니다.")
-//    @GetMapping("/orders")
-//    public OrderDto.ResponseOrderListDto getOrderList(
-//            HttpServletRequest httpServletRequest,
-//            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer pageNum,
-//            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
-//
-//        Long userId = (Long) httpServletRequest.getAttribute("userId");
-//        Pageable pageable = PageRequest.of(pageNum, pageSize);
-//        Page<OrderDto.ResponseOrderDto> orderDtoPage = orderService.getOrderList(userId, pageable);
-//
-//        return OrderDto.ResponseOrderListDto.build(orderDtoPage, pageNum, pageSize);
-//    }
+    @Resource(name = "orderService")
+    OrderService orderService;
+
+    @ApiOperation(value = "새로운 발주 생성", notes = "새로운 발주를 생성합니다.")
+    @PostMapping
+    public ResponseEntity<OrderDto.ResponseOrderDto> createOrder(HttpServletRequest httpServletRequest, @RequestBody OrderDto.RequestCreateOrderDto orderDto) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        OrderDto.ResponseOrderDto responseCreateOrderDto = orderService.createOrder(userId, orderDto);
+        String uri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
+        String createUri = uri + "/" + responseCreateOrderDto.getId();
+
+        return ApiResponseDto.createdResponseEntity(createUri, responseCreateOrderDto);
+    }
+
+    @ApiOperation(value = "발주 목록 조회", notes = "발주 목록을 조회합니다.")
+    @GetMapping("/orders")
+    public OrderDto.ResponseOrderListDto getOrderList(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer pageNum,
+            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
+
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<OrderDto.ResponseOrderDto> orderDtoPage = orderService.getOrderList(userId, pageable);
+
+        return OrderDto.ResponseOrderListDto.build(orderDtoPage, pageNum, pageSize);
+    }
 }

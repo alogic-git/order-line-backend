@@ -73,18 +73,20 @@ public class OrderDto {
         @ApiModelProperty(value = "긴급 여부", example = "false")
         private Boolean emergencyYn;
 
-        @ApiModelProperty(value = "발주일", example = "2021-01-01")
+        @ApiModelProperty(value = "발주일", example = "1708906885")
         private Long orderDt;
 
-        @ApiModelProperty(value = "배송 요청일", example = "2021-01-01")
+        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
         private Long requestDt;
 
         public Order toEntity() {
             return Order.builder()
                     .address(address)
                     .specifics(specifics)
+                    .status(OrderStatusEnum.ONGOING)
                     .managerName(managerName)
                     .emergencyYn(emergencyYn)
+                    .totalPrice(0)
                     .orderDt(TimeFunction.toZonedDateTime(orderDt))
                     .requestDt(TimeFunction.toZonedDateTime(requestDt))
                     .build();

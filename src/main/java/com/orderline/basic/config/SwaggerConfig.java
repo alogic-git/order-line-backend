@@ -25,8 +25,8 @@ public class SwaggerConfig {
   private static final String TITLE = "ORDERLINE";
   private static final String VERSION = "0.0.1";
   private static final String DESCRIPTION = "orderline api\n" +
-            "sample user token: username = gobaebae10, name = 고배배10\n" +
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDg2NzU0ODUsImV4cCI6MTcxNjQ1MTQ4NX0.pykaq_u1df9rGZqAT0kPjejrfrUX8Bajffc3nX_4Hsg";
+            "sample user token: username = gobaebae, name = 고배배\n" +
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDg5MDk4ODAsImV4cCI6MTcxNjY4NTg4MH0.11SA7JuYWHrfKs8Zw-FNFd73OAjq8b5jLQoA4rPxPZ4";
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean
