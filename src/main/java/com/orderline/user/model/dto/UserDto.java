@@ -168,11 +168,8 @@ public class UserDto {
         @ApiModelProperty(value = "전화번호", example = "01030902825")
         private String phone;
 
-        @ApiModelProperty(value = "가입 일시")
-        private ZonedDateTime joinDt;
-
-        @ApiModelProperty(value = "최종 로그인 일시")
-        private ZonedDateTime lastLoginDt;
+        @ApiModelProperty(value = "관리자 여부")
+        private Boolean adminYn;
 
         public void encodePassword(String password){
             this.password = password;
@@ -183,6 +180,7 @@ public class UserDto {
                     .password(password)
                     .name(name)
                     .phone(phone)
+                    .adminYn(adminYn)
                     .joinDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .lastLoginDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .build();

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ProductStatusEnum implements EnumType {
 
-    GENERAL("진행중"),
-    SNS("진행완료");
+    AVAILABLE("주문 가능"),
+    UNAVAILABLE("주문 불가");
 
     private final String text;
 

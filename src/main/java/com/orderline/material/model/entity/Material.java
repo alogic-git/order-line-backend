@@ -2,7 +2,6 @@ package com.orderline.material.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.order.enums.OrderStatusEnum;
-import com.orderline.order.model.entity.Product;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -33,8 +32,10 @@ public class Material extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "specifics")
     private String specifics;
 
+    @Column(name = "quantity")
     private int quantity;
 
     @Enumerated(EnumType.STRING)
