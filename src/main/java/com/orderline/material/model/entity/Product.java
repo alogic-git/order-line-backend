@@ -1,9 +1,7 @@
-package com.orderline.order.model.entity;
+package com.orderline.material.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.material.enums.ProductStatusEnum;
-import com.orderline.material.model.entity.MaterialCompany;
-import com.orderline.order.enums.OrderStatusEnum;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -27,9 +25,8 @@ public class Product extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private MaterialCompany materialCompany;
+    @Column(name = "company_name")
+    private String companyName;
 
     @Column(name = "name")
     private String name;
@@ -43,26 +40,20 @@ public class Product extends BaseTimeEntity {
     @Column(name = "available_stock")
     private int availableStock;
 
+    @Column(name = "color")
     private String color;
 
     @Column(name = "image_uri")
     private String imageUri;
 
+    @Column(name = "specifics")
     private String specifics;
-
-    private int quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatusEnum status;
 
     @Column(name = "model_number")
-    private int modelNumber;
-
-    @Column(name = "request_dt")
-    private ZonedDateTime requestDt;
-
-    @Column(name = "expected_dt")
-    private ZonedDateTime expectedDt;
+    private String modelNumber;
 
     public void deleteProduct(){
         this.deleteYn = true;
