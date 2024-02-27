@@ -33,10 +33,13 @@ public class MaterialHistory extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "specifics")
     private String specifics;
 
+    @Column(name = "quantity")
     private int quantity;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatusEnum status;
 
     @Column(name = "total_price")
