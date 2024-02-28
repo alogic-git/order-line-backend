@@ -33,4 +33,8 @@ public class OrderMaterial extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id")
     private Material material;
+
+    public void deleteOrderMaterial(){
+        this.deleteYn = true;
+    }
 }
