@@ -73,6 +73,12 @@ public class MaterialDto {
         @ApiModelProperty(value = "수량", example = "50")
         private int quantity;
 
+        @ApiModelProperty(value = "진행 상태", example = "ONGOING")
+        private OrderStatusEnum status;
+
+        @ApiModelProperty(value = "특이 사항", example = "특이 사항입니다.")
+        private String specifics;
+
         @ApiModelProperty(value = "배송 요청일", example = "1708906885")
         private Long requestDt;
 
@@ -84,12 +90,33 @@ public class MaterialDto {
                     .product(product)
                     .name(product.getName())
                     .quantity(quantity)
+                    .specifics(specifics)
                     .totalPrice(product.getUnitPrice() * quantity)
-                    .status(OrderStatusEnum.ONGOING)
+                    .status(status)
                     .requestDt(TimeFunction.toZonedDateTime(requestDt))
                     .expectedDt(TimeFunction.toZonedDateTime(expectedDt))
                     .build();
         }
+    }
+
+    @Getter
+    @Builder
+    public static class RequestUpdateMaterialDto {
+        @ApiModelProperty(value = "수량", example = "50")
+        private int quantity;
+
+        @ApiModelProperty(value = "진행 상태", example = "ONGOING")
+        private OrderStatusEnum status;
+
+        @ApiModelProperty(value = "특이 사항", example = "특이 사항입니다.")
+        private String specifics;
+
+        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
+        private Long requestDt;
+
+        @ApiModelProperty(value = "배송 예정일", example = "1708906885")
+        private Long expectedDt;
+
     }
 
     @Builder
