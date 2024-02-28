@@ -27,8 +27,8 @@ public class MaterialHistory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "material_id")
+    private Long materialId;
 
     @Column(name = "name")
     private String name;

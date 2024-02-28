@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
 
@@ -66,6 +68,27 @@ public class MaterialController {
         String createUri = uri + "/" + responseCreateMaterialDto.getId();
 
         return ApiResponseDto.createdResponseEntity(createUri, responseCreateMaterialDto);
+    }
+
+    @ApiOperation(value = "자재 발주 내역 삭제")
+    @PatchMapping("/{materialId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteMaterial(
+            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long materialId) {
+        materialService.deleteMaterial(materialId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "자재 등록 내역 삭제")
+    @PatchMapping("/product/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteProduct(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long productId) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        materialService.deleteProduct(userId, productId);
+        return ResponseEntity.ok().build();
     }
 
 }

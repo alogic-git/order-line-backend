@@ -5,7 +5,6 @@ import com.orderline.basic.utils.TimeFunction;
 import com.orderline.material.model.entity.Material;
 import com.orderline.material.model.entity.Product;
 import com.orderline.order.enums.OrderStatusEnum;
-import com.orderline.order.model.entity.Order;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Builder;
