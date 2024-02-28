@@ -1,11 +1,12 @@
 package com.orderline.material.service;
 
-import com.orderline.basic.exception.ApiException;
 import com.orderline.basic.exception.NotFoundException;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.material.model.dto.ProductDto;
 import com.orderline.material.model.entity.Material;
+import com.orderline.material.model.entity.MaterialHistory;
 import com.orderline.material.model.entity.Product;
+import com.orderline.material.repository.MaterialHistoryRepository;
 import com.orderline.material.repository.MaterialRepository;
 import com.orderline.material.repository.ProductRepository;
 import com.orderline.order.model.entity.Order;
@@ -41,11 +42,14 @@ public class MaterialService {
     @Resource(name = "productRepository")
     ProductRepository productRepository;
 
+    @Resource(name = "materialHistoryRepository")
+    MaterialHistoryRepository materialHistoryRepository;
+
     @Transactional
     public ProductDto.ResponseProductDto createProduct(Long userId, ProductDto.RequestCreateProductDto requestCreateProductDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-        if(!user.getAdminYn()) {
+        if(Boolean.FALSE.equals(user.getAdminYn())) {
             throw new NotFoundException("관리자만 자재를 등록할 수 있습니다.");
         }
 
@@ -90,6 +94,49 @@ public class MaterialService {
 
         return new PageImpl<>(productDtoList, pageable, productDtoList.size());
     }
+
+    public void createMaterialHistory(Material material) {
+        MaterialHistory materialHistory = MaterialHistory.builder()
+                .materialId(material.getId())
+                .name(material.getName())
+                .totalPrice(material.getTotalPrice())
+                .quantity(material.getQuantity())
+                .specifics(material.getSpecifics())
+                .status(material.getStatus())
+                .expectedDt(material.getExpectedDt())
+                .requestDt(material.getRequestDt())
+                .build();
+
+        materialHistoryRepository.save(materialHistory);
+    }
+
+    @Transactional
+    public void deleteMaterial(Long materialId) {
+        Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        createMaterialHistory(material);
+
+        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByMaterial(material);
+        orderMaterialList.forEach(OrderMaterial::deleteOrderMaterial);
+        orderMaterialRepository.saveAll(orderMaterialList);
+
+        material.deleteMaterial();
+        materialRepository.save(material);
+    }
+
+    public void deleteProduct(Long userId, Long productId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        if(Boolean.FALSE.equals(user.getAdminYn())) {
+            throw new NotFoundException("관리자만 자재를 삭제할 수 있습니다.");
+        }
+
+        product.deleteProduct();
+        productRepository.save(product);
+    }
+
 
 //    public Page<ProductDto.ResponseProductDto> getSelectedProductList(Long userId, Pageable pageable) {
 //        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
