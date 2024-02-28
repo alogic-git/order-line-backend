@@ -1,7 +1,10 @@
 package com.orderline.material.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
+import com.orderline.basic.utils.TimeFunction;
 import com.orderline.material.enums.ProductStatusEnum;
+import com.orderline.material.model.dto.MaterialDto;
+import com.orderline.material.model.dto.ProductDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -66,4 +69,14 @@ public class Product extends BaseTimeEntity {
         this.specifics = specifics;
     }
 
+    public void updateProduct(ProductDto.RequestCreateProductDto requestProductDto){
+        this.name = requestProductDto.getName();
+        this.companyName = requestProductDto.getCompanyName();
+        this.modelNumber = requestProductDto.getModelNumber();
+        this.unitPrice = requestProductDto.getUnitPrice();
+        this.salePrice = requestProductDto.getSalePrice();
+        this.availableStock = requestProductDto.getAvailableStock();
+        this.color = requestProductDto.getColor();
+        this.imageUri = requestProductDto.getImageUri();
+    }
 }

@@ -4,9 +4,7 @@ import com.orderline.basic.model.dto.ApiResponseDto;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.material.model.dto.ProductDto;
 import com.orderline.material.service.MaterialService;
-import com.orderline.order.model.dto.OrderDto;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.data.domain.Page;
@@ -20,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
 
@@ -70,13 +67,38 @@ public class MaterialController {
         return ApiResponseDto.createdResponseEntity(createUri, responseCreateMaterialDto);
     }
 
+    @ApiOperation(value = "자재 발주 내역 수정")
+    @PatchMapping("/{materialId}/update")
+    public MaterialDto.ResponseMaterialDto updateMaterial(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long materialId,
+            @RequestBody MaterialDto.RequestUpdateMaterialDto requestMaterialDto) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        return materialService.updateMaterial(userId, materialId, requestMaterialDto);
+    }
+
     @ApiOperation(value = "자재 발주 내역 삭제")
     @PatchMapping("/{materialId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMaterial(
+            HttpServletRequest httpServletRequest,
             @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long materialId) {
-        materialService.deleteMaterial(materialId);
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        materialService.deleteMaterial(userId, materialId);
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "자재 등록 내역 수정")
+    @PatchMapping("/product/{productId}/update")
+    public ProductDto.ResponseProductDto updateProduct(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long productId,
+            @RequestBody ProductDto.RequestCreateProductDto requestProductDto) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        return materialService.updateProduct(userId, productId, requestProductDto);
     }
 
     @ApiOperation(value = "자재 등록 내역 삭제")
@@ -88,7 +110,7 @@ public class MaterialController {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
         materialService.deleteProduct(userId, productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }
