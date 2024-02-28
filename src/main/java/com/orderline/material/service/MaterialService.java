@@ -83,6 +83,35 @@ public class MaterialService {
         return MaterialDto.ResponseMaterialDto.toDto(material, product);
     }
 
+    @Transactional
+    public MaterialDto.ResponseMaterialDto updateMaterial(Long userId, Long materialId, MaterialDto.RequestUpdateMaterialDto requestMaterialDto) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+        Product product = productRepository.findById(material.getProduct().getId()).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        createMaterialHistory(material);
+
+        material.updateMaterial(requestMaterialDto, product);
+
+        return MaterialDto.ResponseMaterialDto.toDto(material, product);
+    }
+
+    @Transactional
+    public ProductDto.ResponseProductDto updateProduct(Long userId, Long productId, ProductDto.RequestCreateProductDto requestProductDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        if(Boolean.FALSE.equals(user.getAdminYn())) {
+            throw new NotFoundException("관리자만 자재 정보를 수정할 수 있습니다.");
+        }
+        product.updateProduct(requestProductDto);
+
+        return ProductDto.ResponseProductDto.toDto(product);
+    }
+
+
     public Page<ProductDto.ResponseProductDto> getAllProductList(Long userId, Pageable pageable) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -111,7 +140,9 @@ public class MaterialService {
     }
 
     @Transactional
-    public void deleteMaterial(Long materialId) {
+    public void deleteMaterial(Long userId, Long materialId) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
         Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
 
         createMaterialHistory(material);
