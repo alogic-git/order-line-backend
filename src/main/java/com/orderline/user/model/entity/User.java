@@ -28,10 +28,13 @@ public class User  extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "username")
     private String username;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "phone")
     private String phone;
 
     @Column(name = "join_dt")
