@@ -7,12 +7,14 @@ import com.orderline.order.model.entity.Order;
 import com.orderline.site.model.entity.Site;
 import com.orderline.user.model.entity.User;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,15 +44,42 @@ public class OrderDto {
         @ApiModelProperty(value = "진행 상태", example = "발주완료")
         private OrderStatusEnum status;
 
-        public static ResponseOrderDto toDto(Order order, Site site) {
+        @ApiModelProperty(value = "발주일", example = "1709106929")
+        private Long orderDt;
+
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
+        private Long requestDt;
+
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
+        private Long expectedDt;
+
+        public static ResponseOrderDto toDto(Order order) {
             return ResponseOrderDto.builder()
                     .id(order.getId())
-                    .siteName(site.getName())
+                    .siteName(order.getSite().getName())
                     .address(order.getAddress())
                     .specifics(order.getSpecifics())
                     .managerName(order.getManagerName())
                     .emergencyYn(order.getEmergencyYn())
                     .status(order.getStatus())
+                    .orderDt(TimeFunction.toUnixTime(order.getOrderDt()))
+                    .requestDt(TimeFunction.toUnixTime(order.getRequestDt()))
+                    .expectedDt(TimeFunction.toUnixTime(order.getExpectedDt()))
+                    .build();
+        }
+
+        public static ResponseOrderDto toDto(Order order, ZonedDateTime expectedDt) { //Order, Material update 후 배송 예정일 수정 시 사용
+            return ResponseOrderDto.builder()
+                    .id(order.getId())
+                    .siteName(order.getSite().getName())
+                    .address(order.getAddress())
+                    .specifics(order.getSpecifics())
+                    .managerName(order.getManagerName())
+                    .emergencyYn(order.getEmergencyYn())
+                    .status(order.getStatus())
+                    .orderDt(TimeFunction.toUnixTime(order.getOrderDt()))
+                    .requestDt(TimeFunction.toUnixTime(order.getRequestDt()))
+                    .expectedDt(TimeFunction.toUnixTime(expectedDt))
                     .build();
         }
     }
@@ -73,14 +102,21 @@ public class OrderDto {
         @ApiModelProperty(value = "긴급 여부", example = "false")
         private Boolean emergencyYn;
 
-        @ApiModelProperty(value = "발주일", example = "1708906885")
+        @ApiModelProperty(value = "상태" , example = "발주 완료")
+        private OrderStatusEnum status;
+
+        @ApiModelProperty(value = "발주일", example = "1709106929")
         private Long orderDt;
 
-        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
         private Long requestDt;
 
-        public Order toEntity() {
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
+        private Long expectedDt;
+
+        public Order toEntity(Site site) {
             return Order.builder()
+                    .site(site)
                     .address(address)
                     .specifics(specifics)
                     .status(OrderStatusEnum.ONGOING)
@@ -89,6 +125,7 @@ public class OrderDto {
                     .totalPrice(0)
                     .orderDt(TimeFunction.toZonedDateTime(orderDt))
                     .requestDt(TimeFunction.toZonedDateTime(requestDt))
+                    .expectedDt(TimeFunction.toZonedDateTime(expectedDt))
                     .build();
         }
     }

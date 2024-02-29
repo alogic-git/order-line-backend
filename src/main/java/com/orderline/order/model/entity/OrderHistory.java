@@ -1,6 +1,8 @@
 package com.orderline.order.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
+import com.orderline.order.enums.OrderStatusEnum;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +33,10 @@ public class OrderHistory extends BaseTimeEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(name = "name")
-    private String name;
-
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "specifics")
     private String specifics;
 
     @Column(name = "manager_name")
@@ -47,7 +48,16 @@ public class OrderHistory extends BaseTimeEntity {
     @Column(name = "total_price")
     private int totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatusEnum status;
+
+    @Column(name = "request_dt")
+    private ZonedDateTime requestDt;
+
     @Column(name = "order_dt")
     private ZonedDateTime orderDt;
+
+    @Column(name = "expected_dt")
+    private ZonedDateTime expectedDt;
 
 }
