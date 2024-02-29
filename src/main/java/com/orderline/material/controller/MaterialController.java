@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
+import static com.orderline.basic.utils.Constants.*;
 
 @Api(tags={"20.Material"})
 @RestController
@@ -33,7 +33,7 @@ public class MaterialController {
     @GetMapping("/products")
     public ProductDto.ResponseProductListDto getProductList(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "페이지 번호", required = true, defaultValue = "0") Integer pageNum,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
             @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
 
         Long userId = (Long) httpServletRequest.getAttribute("userId");
@@ -71,7 +71,7 @@ public class MaterialController {
     @PatchMapping("/{materialId}/update")
     public MaterialDto.ResponseMaterialDto updateMaterial(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long materialId,
+            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long materialId,
             @RequestBody MaterialDto.RequestUpdateMaterialDto requestMaterialDto) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
@@ -83,7 +83,7 @@ public class MaterialController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMaterial(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long materialId) {
+            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long materialId) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
         materialService.deleteMaterial(userId, materialId);
@@ -94,7 +94,7 @@ public class MaterialController {
     @PatchMapping("/product/{productId}/update")
     public ProductDto.ResponseProductDto updateProduct(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long productId,
+            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long productId,
             @RequestBody ProductDto.RequestCreateProductDto requestProductDto) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
@@ -106,7 +106,7 @@ public class MaterialController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteProduct(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = "1") @PathVariable Long productId) {
+            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long productId) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
         materialService.deleteProduct(userId, productId);

@@ -74,6 +74,7 @@ public class Product extends BaseTimeEntity {
         this.companyName = requestProductDto.getCompanyName();
         this.modelNumber = requestProductDto.getModelNumber();
         this.unitPrice = requestProductDto.getUnitPrice();
+        this.specifics = requestProductDto.getSpecifics();
         this.salePrice = requestProductDto.getSalePrice();
         this.availableStock = requestProductDto.getAvailableStock();
         this.color = requestProductDto.getColor();
