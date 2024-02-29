@@ -18,15 +18,17 @@ import java.time.ZonedDateTime;
 @Builder
 @Getter
 @Where(clause = "delete_yn = 0")
-@Table(name="order")
+@Table(name="orders")
 public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "specifics")
     private String specifics;
 
     @Column(name = "manager_name")
