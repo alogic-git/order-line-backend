@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,8 @@ public class MaterialService {
                 .order(order)
                 .material(material)
                 .build();
+
+        updateTotalPriceAndExpectedDt(order);
 
         materialRepository.save(material);
         orderMaterialRepository.save(orderMaterial);
@@ -168,16 +171,40 @@ public class MaterialService {
         productRepository.save(product);
     }
 
+    public int calculateTotalPrice(Order order) {
+        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByOrder(order);
 
-//    public Page<ProductDto.ResponseProductDto> getSelectedProductList(Long userId, Pageable pageable) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-//
-//        List<Product> productList = productRepository.findAll();
-//
-//        List<ProductDto.ResponseProductDto> productDtoList = productList.stream()
-//                .map(ProductDto.ResponseProductDto::toDto)
-//                .collect(Collectors.toList());
-//
-//        return new PageImpl<>(productDtoList, pageable, productDtoList.size());
-//    }
+        int totalPrice = 0;
+
+        for (OrderMaterial orderMaterial : orderMaterialList) {
+            totalPrice += orderMaterial.getMaterial().getTotalPrice();
+        }
+
+        return totalPrice;
+    }
+
+    public ZonedDateTime calculateExpectedDt(Order order) {
+        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByOrder(order);
+
+        ZonedDateTime expectedDt = order.getRequestDt();
+
+        for (OrderMaterial orderMaterial : orderMaterialList) {
+            ZonedDateTime tmpTime = orderMaterial.getMaterial().getExpectedDt();
+            if (tmpTime.isAfter(expectedDt)) {
+                expectedDt = tmpTime;
+            }
+        }
+        return expectedDt;
+    }
+
+    public void updateTotalPriceAndExpectedDt(Order order) {
+        ZonedDateTime expectedDt = calculateExpectedDt(order);
+        order.updateExpectedDt(expectedDt);
+
+        int totalPrice = calculateTotalPrice(order);
+        order.updateTotalPrice(totalPrice);
+
+        orderRepository.save(order);
+    }
+
 }

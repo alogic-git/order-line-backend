@@ -44,7 +44,7 @@ public class MaterialDto {
         @ApiModelProperty(value = "총 가격", example = "500000")
         private int totalPrice;
 
-        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
         private Long requestDt;
 
         public static ResponseMaterialDto toDto(Material material, Product product) {
@@ -79,10 +79,10 @@ public class MaterialDto {
         @ApiModelProperty(value = "특이 사항", example = "특이 사항입니다.")
         private String specifics;
 
-        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
         private Long requestDt;
 
-        @ApiModelProperty(value = "배송 예정일", example = "1708906885")
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
         private Long expectedDt;
 
         public Material toEntity(Product product) {
@@ -111,10 +111,10 @@ public class MaterialDto {
         @ApiModelProperty(value = "특이 사항", example = "특이 사항입니다.")
         private String specifics;
 
-        @ApiModelProperty(value = "배송 요청일", example = "1708906885")
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
         private Long requestDt;
 
-        @ApiModelProperty(value = "배송 예정일", example = "1708906885")
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
         private Long expectedDt;
 
     }
