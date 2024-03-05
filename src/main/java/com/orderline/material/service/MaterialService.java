@@ -127,6 +127,14 @@ public class MaterialService {
         return new PageImpl<>(productDtoList, pageable, productDtoList.size());
     }
 
+    public ProductDto.ResponseProductDto getProductDetail(Long userId, Long productId) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        return ProductDto.ResponseProductDto.toDto(product);
+    }
+
     public void createMaterialHistory(Material material) {
         MaterialHistory materialHistory = MaterialHistory.builder()
                 .materialId(material.getId())

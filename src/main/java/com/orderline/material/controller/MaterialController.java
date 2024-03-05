@@ -113,4 +113,14 @@ public class MaterialController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "자재 상세 조회")
+    @GetMapping("/product/{productId}")
+    public ProductDto.ResponseProductDto getProductDetail(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long productId) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        return materialService.getProductDetail(userId, productId);
+    }
+
 }
