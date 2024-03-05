@@ -102,9 +102,6 @@ public class OrderDto {
         @ApiModelProperty(value = "긴급 여부", example = "false")
         private Boolean emergencyYn;
 
-        @ApiModelProperty(value = "상태" , example = "발주 완료")
-        private OrderStatusEnum status;
-
         @ApiModelProperty(value = "발주일", example = "1709106929")
         private Long orderDt;
 
@@ -128,6 +125,37 @@ public class OrderDto {
                     .expectedDt(TimeFunction.toZonedDateTime(expectedDt))
                     .build();
         }
+    }
+
+    @Getter
+    @Builder
+    public static class RequestUpdateOrderDto {
+        @ApiModelProperty(value = "현장 ID", example = "1")
+        private Long siteId;
+
+        @ApiModelProperty(value = "발주 주소", example = "서울시 강남구 역삼동 123-4")
+        private String address;
+
+        @ApiModelProperty(value = "특이 사항", example = "발주 특이사항입니다.")
+        private String specifics;
+
+        @ApiModelProperty(value = "담당자명", example = "홍길동")
+        private String managerName;
+
+        @ApiModelProperty(value = "긴급 여부", example = "false")
+        private Boolean emergencyYn;
+
+        @ApiModelProperty(value = "진행 상태", example = "COMPLETE")
+        private OrderStatusEnum status;
+
+        @ApiModelProperty(value = "발주일", example = "1709106929")
+        private Long orderDt;
+
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
+        private Long requestDt;
+
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
+        private Long expectedDt;
     }
 
     @Builder

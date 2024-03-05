@@ -1,6 +1,8 @@
 package com.orderline.order.service;
 
 import com.orderline.basic.exception.NotFoundException;
+import com.orderline.material.model.dto.MaterialDto;
+import com.orderline.material.model.entity.Material;
 import com.orderline.order.model.dto.OrderDto;
 import com.orderline.order.model.entity.Order;
 import com.orderline.order.model.entity.OrderHistory;
@@ -75,16 +77,35 @@ public class OrderService {
         return new PageImpl<>(orderDtoList, pageable, orderDtoList.size());
     }
 
+    public Page<MaterialDto.ResponseMaterialDto> getOrderMaterials(Long userId, Long orderId, Pageable pageable) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("해당 발주를 찾을 수 없습니다."));
+
+        List<Material> materialList = orderMaterialRepository.findByOrder(order)
+                .stream()
+                .map(OrderMaterial::getMaterial)
+                .collect(Collectors.toList());
+
+        List<MaterialDto.ResponseMaterialDto> materialDtoList = materialList.stream()
+                .map(material -> MaterialDto.ResponseMaterialDto.toDto(material, material.getProduct()))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(materialDtoList, pageable, materialDtoList.size());
+    }
+
     @Transactional
-    public OrderDto.ResponseOrderDto updateOrder(Long userId, Long orderId, OrderDto.RequestCreateOrderDto requestOrderDto) {
+    public OrderDto.ResponseOrderDto updateOrder(Long userId, Long orderId, OrderDto.RequestUpdateOrderDto requestOrderDto) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("발주를 찾을 수 없습니다."));
 
-
         createOrderHistory(order);
 
-        order.updateOrder(requestOrderDto);
+        Site site = siteRepository.findById(requestOrderDto.getSiteId())
+                .orElseThrow(() -> new NotFoundException("현장을 찾을 수 없습니다."));
+
+        order.updateOrder(requestOrderDto, site);
         ZonedDateTime expectedDt = calculateExpectedDt(order);
         order.updateExpectedDt(expectedDt);
 

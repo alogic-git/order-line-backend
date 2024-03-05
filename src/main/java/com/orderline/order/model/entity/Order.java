@@ -81,7 +81,8 @@ public class Order extends BaseTimeEntity {
         this.specifics = specifics;
     }
 
-    public void updateOrder(OrderDto.RequestCreateOrderDto requestOrderDto){
+    public void updateOrder(OrderDto.RequestUpdateOrderDto requestOrderDto, Site site){
+        this.site = site;
         this.address = requestOrderDto.getAddress();
         this.specifics = requestOrderDto.getSpecifics();
         this.managerName = requestOrderDto.getManagerName();

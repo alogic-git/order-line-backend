@@ -26,17 +26,17 @@ public class BasicController {
     @Resource(name = "awsS3Service")
     AwsS3Service awsS;
 
-    @ApiOperation(value = "email 발송", notes = "email을 발송합니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "이메일 발송에 성공했습니다."),
-    })
-    @PostMapping("/sendEmail")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Void> sendEmail(
-            @RequestBody @Valid CommonDto.EmailInfo emailInfo) {
-
-        commonService.sendEmail(emailInfo.getTo(), emailInfo.getSubject(), emailInfo.getContents());
-
-        return ResponseEntity.ok().build();
-    }
+//    @ApiOperation(value = "email 발송", notes = "email을 발송합니다.")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "이메일 발송에 성공했습니다."),
+//    })
+//    @PostMapping("/sendEmail")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<Void> sendEmail(
+//            @RequestBody @Valid CommonDto.EmailInfo emailInfo) {
+//
+//        commonService.sendEmail(emailInfo.getTo(), emailInfo.getSubject(), emailInfo.getContents());
+//
+//        return ResponseEntity.ok().build();
+//    }
 }
