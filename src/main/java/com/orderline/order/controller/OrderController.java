@@ -1,7 +1,7 @@
 package com.orderline.order.controller;
 
 import com.orderline.basic.model.dto.ApiResponseDto;
-import com.orderline.material.model.dto.ProductDto;
+import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.order.model.dto.OrderDto;
 import com.orderline.order.service.OrderService;
 import io.swagger.annotations.Api;
@@ -18,8 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.orderline.basic.utils.Constants.DEFAULT_ID;
-import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
+import static com.orderline.basic.utils.Constants.*;
 
 @Api(tags={"10.Order"})
 @RestController
@@ -45,7 +44,7 @@ public class OrderController {
     @GetMapping("/orders")
     public OrderDto.ResponseOrderListDto getOrderList(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_ID) Integer pageNum,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
             @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
 
         Long userId = (Long) httpServletRequest.getAttribute("userId");
@@ -71,9 +70,24 @@ public class OrderController {
     public OrderDto.ResponseOrderDto updateOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
-            @RequestBody OrderDto.RequestCreateOrderDto requestOrderDto) {
+            @RequestBody OrderDto.RequestUpdateOrderDto requestOrderDto) {
 
         Long userId = (Long) httpServletRequest.getAttribute("userId");
         return orderService.updateOrder(userId, orderId, requestOrderDto);
+    }
+
+    @ApiOperation(value = "발주 자재 내역 조회", notes = "발주 자재 내역을 조회합니다.")
+    @GetMapping("/{orderId}/materials")
+    public MaterialDto.ResponseMaterialListDto getOrderMaterials(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
+            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
+
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<MaterialDto.ResponseMaterialDto> materialDtoPage = orderService.getOrderMaterials(userId, orderId, pageable);
+
+        return MaterialDto.ResponseMaterialListDto.build(materialDtoPage, pageNum, pageSize);
     }
 }
