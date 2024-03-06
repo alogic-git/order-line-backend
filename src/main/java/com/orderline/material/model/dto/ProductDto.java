@@ -26,7 +26,7 @@ public class ProductDto {
         @ApiModelProperty(value = "모델 번호", example = "12345677")
         private String modelNumber;
 
-        @ApiModelProperty(value = "진행 상태", example = "발주완료")
+        @ApiModelProperty(value = "상태", example = "주문 가능")
         private ProductStatusEnum status;
 
         @ApiModelProperty(value = "단가", example = "10000")
@@ -35,7 +35,7 @@ public class ProductDto {
         @ApiModelProperty(value = "할인가", example = "8000")
         private int salePrice;
 
-        @ApiModelProperty(value = "재고수량", example = "100")
+        @ApiModelProperty(value = "재고 수량", example = "100")
         private int availableStock;
 
         @ApiModelProperty(value = "색상", example = "black")
@@ -77,7 +77,7 @@ public class ProductDto {
         @ApiModelProperty(value = "할인가", example = "8000")
         private int salePrice;
 
-        @ApiModelProperty(value = "재고수량", example = "100")
+        @ApiModelProperty(value = "재고 수량", example = "100")
         private int availableStock;
 
         @ApiModelProperty(value = "색상", example = "black")
@@ -88,6 +88,9 @@ public class ProductDto {
 
         @ApiModelProperty(value = "특이 사항", example = "특이 사항입니다.")
         private String specifics;
+
+        @ApiModelProperty(value = "상태", example = "주문 가능")
+        private ProductStatusEnum status;
 
         public Product toEntity() {
             return Product.builder()
@@ -100,7 +103,7 @@ public class ProductDto {
                     .color(color)
                     .imageUri(imageUri)
                     .specifics(specifics)
-                    .status(ProductStatusEnum.AVAILABLE)
+                    .status(status)
                     .build();
         }
     }
@@ -115,7 +118,7 @@ public class ProductDto {
         @ApiModelProperty(value = "현재 페이지")
         private Integer currentPage;
 
-        @ApiModelProperty(value = "페이지당 항목 수")
+        @ApiModelProperty(value = "페이지 당 항목 수")
         private Integer maxResults;
 
         @ApiModelProperty(value = "전체 페이지")
