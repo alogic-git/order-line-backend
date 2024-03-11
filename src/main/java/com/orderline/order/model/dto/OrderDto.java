@@ -87,9 +87,6 @@ public class OrderDto {
     @Getter
     @Builder
     public static class RequestCreateOrderDto {
-        @ApiModelProperty(value = "현장 ID", example = "1")
-        private Long siteId;
-
         @ApiModelProperty(value = "발주 주소", example = "서울시 강남구 역삼동 123-4")
         private String address;
 
