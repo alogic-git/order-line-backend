@@ -31,6 +31,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(auth);
             request.setAttribute("userId", Long.valueOf(userPk));
             request.setAttribute("role", jwtTokenProvider.getUserRole(token));
+            if(jwtTokenProvider.getSiteId(token) != null) {
+                request.setAttribute("siteId", jwtTokenProvider.getSiteId(token).get());
+            } else {
+                request.setAttribute("siteId", jwtTokenProvider.getSiteId(token));
+            }
         }
 
         filterChain.doFilter(request, response);

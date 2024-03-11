@@ -1,6 +1,7 @@
 package com.orderline.site.service;
 
 import com.orderline.basic.exception.NotFoundException;
+import com.orderline.basic.exception.UnauthorizedException;
 import com.orderline.order.model.dto.OrderDto;
 import com.orderline.order.model.entity.Order;
 import com.orderline.order.model.entity.OrderHistory;
@@ -70,6 +71,20 @@ public class SiteService {
                 .collect(Collectors.toList());
 
         return SiteDto.ResponseSiteListDto.toDto(sites);
+    }
+
+    @Transactional
+    public SiteDto.ResponseSiteDto selectSite(Long userId, Long siteId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        Site site = siteRepository.findById(siteId).orElseThrow(() -> new NotFoundException("해당 현장을 찾을 수 없습니다."));
+
+        UserSite usersite = userSiteRepository.findByUserAndSite(user, site)
+                .orElseThrow(() -> new NotFoundException("사용자의 현장을 찾을 수 없습니다."));
+
+        user.setSite(site);
+        userRepository.save(user);
+
+        return SiteDto.ResponseSiteDto.toDto(site);
     }
 
 }

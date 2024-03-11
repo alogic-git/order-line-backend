@@ -41,6 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserDto.RoleDto.builder()
                 .id(userId)
                 .password(user.getPassword())
+                .siteId(user.getSiteId() == null ? null : user.getSiteId())
                 .roleType(userRoleEnum)
                 .build();
     }
