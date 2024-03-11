@@ -40,24 +40,8 @@ public class AuthController {
     public UserDto.ResponseUserInfoWithAuthDto reissueJwt(
             @RequestBody @Valid UserDto.RequestRefreshJwtDto refreshToken) {
 
-        UserTokenDto.UserTokenInfoDto userToken = authService.getUserToken(refreshToken.getRefreshToken());
-        if(isNull(userToken)) {
-            throw new NotFoundException("입력하신 refresh token 이 존재하지 않습니다. 로그인을 다시 진행해주세요.");
-        }
-        UserDto.UserInfoDto user = userToken.getUser();
-        if(isNull(user)){
-            throw new InternalServerErrorException("존재하지 않는 유저입니다.");
-        }
-
-        if(!jwtTokenProvider.validateToken(userToken.getRefreshToken())) {
-            throw new InternalServerErrorException("입력하신 refresh token 이 유효하지 않습니다. 로그인을 다시 진행해주세요.");
-        }
-        Long result = authService.deleteUserToken(userToken);
-        if(result <= 0){
-            throw new InternalServerErrorException("refresh token 갱신중 오류가 발생했습니다.");
-        }
-
-        return authService.reissueJwt(user, userToken);
+        UserTokenDto.UserTokenInfoDto userTokenInfoDto = authService.getValidUserToken(refreshToken.getRefreshToken());
+        return authService.reissueJwt(userTokenInfoDto);
     }
 
 }

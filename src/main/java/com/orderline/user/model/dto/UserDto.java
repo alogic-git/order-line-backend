@@ -2,6 +2,7 @@ package com.orderline.user.model.dto;
 
 import com.orderline.user.enums.UserRoleEnum;
 import com.orderline.user.model.entity.User;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ public class UserDto {
         private Long id;
 
         private String password;
+
+        @ApiModelProperty(value = "선택한 현장 ID")
+        private Long siteId;
 
         @ApiModelProperty(value = "유저 역할")
         private UserRoleEnum roleType;
@@ -70,8 +74,11 @@ public class UserDto {
         @ApiModelProperty(value = "Last Login Date")
         private ZonedDateTime lastLoginDt;
 
-        @ApiModelProperty(value = "운영자 여부")
+        @ApiModelProperty(value = "관리자 여부")
         private Boolean adminYn;
+
+        @ApiModelProperty(value = "현장 ID")
+        private Long siteId;
 
         public User toEntity(){
             return User.builder()
@@ -93,6 +100,7 @@ public class UserDto {
                     .joinDt(user.getJoinDt())
                     .lastLoginDt(user.getLastLoginDt())
                     .adminYn(user.getAdminYn())
+                    .siteId(null)
                     .build();
         }
     }
@@ -181,6 +189,7 @@ public class UserDto {
                     .name(name)
                     .phone(phone)
                     .adminYn(adminYn)
+                    .siteId(null)
                     .joinDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .lastLoginDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .build();
