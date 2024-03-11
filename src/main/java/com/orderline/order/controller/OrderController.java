@@ -32,8 +32,9 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderDto.ResponseOrderDto> createOrder(HttpServletRequest httpServletRequest, @RequestBody OrderDto.RequestCreateOrderDto orderDto) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
+        Long siteId = (Long) httpServletRequest.getAttribute("siteId");
 
-        OrderDto.ResponseOrderDto responseCreateOrderDto = orderService.createOrder(userId, orderDto);
+        OrderDto.ResponseOrderDto responseCreateOrderDto = orderService.createOrder(userId, siteId, orderDto);
         String uri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
         String createUri = uri + "/" + responseCreateOrderDto.getId();
 

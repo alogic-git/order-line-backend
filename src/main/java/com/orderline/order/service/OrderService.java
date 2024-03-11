@@ -47,11 +47,13 @@ public class OrderService {
     OrderHistoryRepository orderHistoryRepository;
 
     @Transactional
-    public OrderDto.ResponseOrderDto createOrder(Long userId, OrderDto.RequestCreateOrderDto requestCreateOrderDto) {
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+    public OrderDto.ResponseOrderDto createOrder(Long userId, Long siteId, OrderDto.RequestCreateOrderDto requestCreateOrderDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-        Site site = siteRepository.findById(requestCreateOrderDto.getSiteId())
+        Site site = siteRepository.findById(siteId)
                 .orElseThrow(() -> new NotFoundException("현장을 찾을 수 없습니다."));
+
+        userSiteRepository.findByUserAndSite(user, site).orElseThrow(() -> new NotFoundException("사용자 현장을 찾을 수 없습니다."));
 
         Order order = requestCreateOrderDto.toEntity(site);
 
