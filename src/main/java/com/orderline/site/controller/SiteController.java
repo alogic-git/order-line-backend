@@ -51,4 +51,15 @@ public class SiteController {
         return siteService.getSiteList(userId);
 
     }
+
+    @ApiOperation(value = "현장 선택", notes = "현장을 선택합니다.")
+    @PatchMapping("/{siteId}")
+    public SiteDto.ResponseSiteDto selectSite(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "현장 id", required = true) @PathVariable Long siteId) {
+
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        return siteService.selectSite(userId, siteId);
+    }
+
 }

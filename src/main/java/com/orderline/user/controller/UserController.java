@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @Api(tags={"01.User"})
 @RestController
-@RequestMapping(path = {"admin", "user"}, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = {"user"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     @Resource(name = "userService")
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "로그아웃", notes = "로그아웃을 합니다.")
-    @PostMapping("/logout")
+    @PostMapping({"user/logout", "admin/logout"})
     @ResponseStatus(HttpStatus.OK)
     public ApiResponseDto<Boolean> doSignOut(
             HttpServletRequest httpServletRequest){
@@ -48,16 +48,16 @@ public class UserController {
         return ApiResponseDto.createException("로그아웃이 완료되었습니다.", true);
     }
 
-//    @ApiOperation(value = "아이디 중복 검사")
-//    @GetMapping("/check/{username}")
-//    public ApiResponseDto<Boolean> checkId(
-//            @ApiParam(value = "username", required = true) @PathVariable String username) {
-//
-//        Long userId = userService.getUserInfoByUsername(username);
-//        if(userId > 0L) throw new InternalServerErrorException("이미 가입된 ID 입니다.");
-//        return ApiResponseDto.createException("사용 가능한 ID 입니다.", true);
-//    }
-//
+    @ApiOperation(value = "아이디 중복 검사")
+    @GetMapping("/check/{username}")
+    public ApiResponseDto<Boolean> checkId(
+            @ApiParam(value = "username", required = true) @PathVariable String username) {
+
+        Long userId = userService.getUserInfoByUsername(username);
+        if(userId > 0L) throw new InternalServerErrorException("이미 가입된 ID 입니다.");
+        return ApiResponseDto.createException("사용 가능한 ID 입니다.", true);
+    }
+
     @ApiOperation(value = "회원 가입", notes = "회원 가입을 합니다.")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)

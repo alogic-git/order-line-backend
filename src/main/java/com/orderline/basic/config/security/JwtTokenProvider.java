@@ -41,6 +41,9 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     public String createAccessToken(String userPk, UserDto.RoleDto userRoleDto) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("role", userRoleDto.getRoleType());
+        if (userRoleDto.getSiteId() != null) {
+            claims.put("siteId", userRoleDto.getSiteId());
+        }
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
@@ -98,6 +101,28 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
         return role;
     }
 
+    public Optional<Long> getSiteId(String token) {
+        Object siteId = parsingSiteId(token);
+        if (siteId instanceof Integer) {
+            return Optional.of(((Integer) siteId).longValue());
+        } else {
+            return (Optional<Long>) siteId;
+        }
+    }
+
+    public Object parsingSiteId(String token) {
+        Object siteId;
+        try {
+            siteId = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody().get("siteId");
+        }
+        catch(ExpiredJwtException e) {
+            return null;
+        }
+        return siteId;
+    }
 
     public Long getExpiresIn(String token) {
         Date now = new Date();

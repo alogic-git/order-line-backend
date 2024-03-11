@@ -1,5 +1,6 @@
 package com.orderline.basic.config.security;
 
+import com.orderline.user.enums.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +40,9 @@ public class SecurityConfiguration {
         .and()
         .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // preflight 요청은 모두 허용
-        .antMatchers("/", "/v2/api-docs/**", "/swagger*/**","/user/**","/auth/token/reissue", "/common/**", "/basic/**").permitAll()
-//        .antMatchers("/manager/**").hasRole(UserRoleEnum.MANAGER.getId())
-//        .antMatchers("/tutor/**").hasRole(UserRoleEnum.TUTOR.getId())
-//        .antMatchers("/tutee/**").hasRole(UserRoleEnum.TUTEE.getId())
-//        .antMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.getId())
+        .antMatchers("/", "/v2/api-docs/**", "/swagger*/**", "/user/**", "/auth/token/reissue", "/common/**", "/basic/**").permitAll()
+        //.antMatchers("/user/**").hasRole(UserRoleEnum.USER.getId())
+        .antMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.getId())
         .antMatchers(HttpMethod.OPTIONS, "/**", "/**/*").permitAll()
         .and()
         .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
