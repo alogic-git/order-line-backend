@@ -1,6 +1,7 @@
 package com.orderline.order.service;
 
 import com.orderline.basic.exception.NotFoundException;
+import com.orderline.basic.exception.UnauthorizedException;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.material.model.entity.Material;
 import com.orderline.order.model.dto.OrderDto;
@@ -19,6 +20,7 @@ import com.orderline.user.repository.UserSiteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,7 +55,7 @@ public class OrderService {
         Site site = siteRepository.findById(siteId)
                 .orElseThrow(() -> new NotFoundException("현장을 찾을 수 없습니다."));
 
-        userSiteRepository.findByUserAndSite(user, site).orElseThrow(() -> new NotFoundException("사용자 현장을 찾을 수 없습니다."));
+        userSiteRepository.findByUserAndSite(user, site).orElseThrow(() -> new AccessDeniedException("해당 현장에 대한 권한이 없습니다."));
 
         Order order = requestCreateOrderDto.toEntity(site);
 

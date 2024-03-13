@@ -1,5 +1,6 @@
 package com.orderline.order.controller;
 
+import com.orderline.basic.exception.NotFoundException;
 import com.orderline.basic.model.dto.ApiResponseDto;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.order.model.dto.OrderDto;
@@ -33,7 +34,9 @@ public class OrderController {
     public ResponseEntity<OrderDto.ResponseOrderDto> createOrder(HttpServletRequest httpServletRequest, @RequestBody OrderDto.RequestCreateOrderDto orderDto) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
         Long siteId = (Long) httpServletRequest.getAttribute("siteId");
-
+        if (siteId == null) {
+            throw new NotFoundException("현장이 선택 되지 않았습니다.");
+        }
         OrderDto.ResponseOrderDto responseCreateOrderDto = orderService.createOrder(userId, siteId, orderDto);
         String uri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
         String createUri = uri + "/" + responseCreateOrderDto.getId();
@@ -42,7 +45,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 목록 조회", notes = "발주 목록을 조회합니다.")
-    @GetMapping("/orders")
+    @GetMapping("orders")
     public OrderDto.ResponseOrderListDto getOrderList(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
@@ -56,10 +59,10 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 상세 조회", notes = "발주 상세를 조회합니다.")
-    @GetMapping("/{orderId}")
+    @GetMapping("{orderId}")
     public OrderDto.ResponseOrderDto getOrderDetail(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId) {
+            @ApiParam(value = "발주 ID", required = true) @PathVariable Long orderId) {
 
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
@@ -67,7 +70,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 수정", notes = "발주를 수정합니다.")
-    @PatchMapping("/{orderId}")
+    @PatchMapping("{orderId}")
     public OrderDto.ResponseOrderDto updateOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
@@ -78,7 +81,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 자재 내역 조회", notes = "발주 자재 내역을 조회합니다.")
-    @GetMapping("/{orderId}/materials")
+    @GetMapping("{orderId}/materials")
     public MaterialDto.ResponseMaterialListDto getOrderMaterials(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
