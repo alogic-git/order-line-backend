@@ -29,7 +29,7 @@ public class ProductController {
     MaterialService materialService;
 
     @ApiOperation(value = "자재 전체 목록 조회", notes = "자재 목록을 조회합니다.")
-    @GetMapping({"admin/product/products", "user/product/products"})
+    @GetMapping({"admin/product", "user/product"})
     public ProductDto.ResponseProductListDto getProductList(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,

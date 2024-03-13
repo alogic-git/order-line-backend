@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @Api(tags={"01.User"})
 @RestController
-@RequestMapping(path = {"user"}, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = {"common"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     @Resource(name = "userService")
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "로그아웃", notes = "로그아웃을 합니다.")
-    @PostMapping({"user/logout", "admin/logout"})
+    @PostMapping("logout")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponseDto<Boolean> doSignOut(
             HttpServletRequest httpServletRequest){
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "아이디 중복 검사")
-    @GetMapping("/check/{username}")
+    @GetMapping("check/{username}")
     public ApiResponseDto<Boolean> checkId(
             @ApiParam(value = "username", required = true) @PathVariable String username) {
 
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원 가입", notes = "회원 가입을 합니다.")
-    @PostMapping("/signup")
+    @PostMapping("signup")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto.ResponseUserInfoWithAuthDto doSignUp(
             @RequestBody @Valid UserDto.RequestUserSignUpDto signUpDto) {

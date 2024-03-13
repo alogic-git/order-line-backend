@@ -38,10 +38,10 @@ public class MaterialController {
     }
 
     @ApiOperation(value = "자재 발주 내역 수정")
-    @PatchMapping("/{materialId}/update")
+    @PatchMapping("{materialId}/update")
     public MaterialDto.ResponseMaterialDto updateMaterial(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long materialId,
+            @ApiParam(value = "자재 id", required = true) @PathVariable Long materialId,
             @RequestBody MaterialDto.RequestUpdateMaterialDto requestMaterialDto) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
@@ -49,11 +49,11 @@ public class MaterialController {
     }
 
     @ApiOperation(value = "자재 발주 내역 삭제")
-    @PatchMapping("/{materialId}")
+    @PatchMapping("{materialId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMaterial(
             HttpServletRequest httpServletRequest,
-            @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long materialId) {
+            @ApiParam(value = "자재 id", required = true) @PathVariable Long materialId) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
 
         materialService.deleteMaterial(userId, materialId);

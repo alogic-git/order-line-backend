@@ -32,6 +32,18 @@ public class SwaggerConfig {
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean
+  public Docket commonApi() {
+    return new Docket(DocumentationType.SWAGGER_2)
+            .groupName("common")
+            .apiInfo(apiInfo())
+            .securityContexts(Collections.singletonList(securityContext()))
+            .securitySchemes(Collections.singletonList(apiKey()))
+            .select()
+            .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
+            .paths(PathSelectors.ant("/common/**"))
+            .build();
+  }
+  @Bean
   public Docket userApi() {
     return new Docket(DocumentationType.SWAGGER_2)
             .groupName("user")
@@ -53,7 +65,7 @@ public class SwaggerConfig {
             .securitySchemes(Collections.singletonList(apiKey()))
             .select()
             .apis(RequestHandlerSelectors.basePackage(PACKAGE_NAME))
-            .paths(PathSelectors.ant("/admin/**").or(not(PathSelectors.ant("/user/**"))))
+            .paths(PathSelectors.ant("/admin/**").or(not(PathSelectors.ant("/common/**").or((PathSelectors.ant("/user/**"))))))
             .build();
   }
 

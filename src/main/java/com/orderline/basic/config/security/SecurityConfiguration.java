@@ -40,8 +40,8 @@ public class SecurityConfiguration {
         .and()
         .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // preflight 요청은 모두 허용
-        .antMatchers("/", "/v2/api-docs/**", "/swagger*/**", "/user/**", "/auth/token/reissue", "/common/**", "/basic/**").permitAll()
-        //.antMatchers("/user/**").hasRole(UserRoleEnum.USER.getId())
+        .antMatchers("/", "/v2/api-docs/**", "/swagger*/**", "/auth/token/reissue", "/common/**", "/basic/**").permitAll()
+        .antMatchers("/user/**").hasRole(UserRoleEnum.USER.getId())
         .antMatchers("/admin/**").hasRole(UserRoleEnum.ADMIN.getId())
         .antMatchers(HttpMethod.OPTIONS, "/**", "/**/*").permitAll()
         .and()
