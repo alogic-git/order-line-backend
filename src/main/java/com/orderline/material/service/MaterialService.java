@@ -48,11 +48,7 @@ public class MaterialService {
 
     @Transactional
     public ProductDto.ResponseProductDto createProduct(Long userId, ProductDto.RequestCreateProductDto requestCreateProductDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-        if(Boolean.FALSE.equals(user.getAdminYn())) {
-            throw new NotFoundException("관리자만 자재를 등록할 수 있습니다.");
-        }
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         Product product = requestCreateProductDto.toEntity();
 
@@ -78,7 +74,13 @@ public class MaterialService {
                 .material(material)
                 .build();
 
-        updateTotalPriceAndExpectedDt(order);
+        ZonedDateTime expectedDt = calculateExpectedDt(order);
+        order.updateExpectedDt(expectedDt);
+
+        int totalPrice = calculateTotalPrice(order);
+        order.updateTotalPrice(totalPrice);
+
+        orderRepository.save(order);
 
         materialRepository.save(material);
         orderMaterialRepository.save(orderMaterial);
@@ -102,13 +104,10 @@ public class MaterialService {
 
     @Transactional
     public ProductDto.ResponseProductDto updateProduct(Long userId, Long productId, ProductDto.RequestCreateProductDto requestProductDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
 
-        if(Boolean.FALSE.equals(user.getAdminYn())) {
-            throw new NotFoundException("관리자만 자재 정보를 수정할 수 있습니다.");
-        }
         product.updateProduct(requestProductDto);
 
         return ProductDto.ResponseProductDto.toDto(product);
@@ -167,13 +166,9 @@ public class MaterialService {
     }
 
     public void deleteProduct(Long userId, Long productId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
-
-        if(Boolean.FALSE.equals(user.getAdminYn())) {
-            throw new NotFoundException("관리자만 자재를 삭제할 수 있습니다.");
-        }
 
         product.deleteProduct();
         productRepository.save(product);
@@ -204,15 +199,4 @@ public class MaterialService {
         }
         return expectedDt;
     }
-
-    public void updateTotalPriceAndExpectedDt(Order order) {
-        ZonedDateTime expectedDt = calculateExpectedDt(order);
-        order.updateExpectedDt(expectedDt);
-
-        int totalPrice = calculateTotalPrice(order);
-        order.updateTotalPrice(totalPrice);
-
-        orderRepository.save(order);
-    }
-
 }
