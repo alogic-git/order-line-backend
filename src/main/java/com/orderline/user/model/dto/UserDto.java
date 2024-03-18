@@ -2,7 +2,6 @@ package com.orderline.user.model.dto;
 
 import com.orderline.user.enums.UserRoleEnum;
 import com.orderline.user.model.entity.User;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -56,16 +55,14 @@ public class UserDto {
         private Long userId;
 
         @ApiModelProperty(value = "ID", example = "gobaebae")
-        @NotBlank(message = "Id를 입력해주세요.")
+        @NotBlank(message = "ID를 입력해주세요.")
         private String username;
-
-        private String password;
 
         @ApiModelProperty(value = "Name")
         private String name;
 
         @ApiModelProperty(value = "Phone")
-        @NotBlank(message = "Phone을 입력해주세요.")
+        @NotBlank(message = "전화번호를 입력해주세요.")
         private String phone;
 
         @ApiModelProperty(value = "Join Date")
@@ -100,7 +97,7 @@ public class UserDto {
                     .joinDt(user.getJoinDt())
                     .lastLoginDt(user.getLastLoginDt())
                     .adminYn(user.getAdminYn())
-                    .siteId(null)
+                    .siteId(user.getSiteId() == null ? null : user.getSiteId())
                     .build();
         }
     }

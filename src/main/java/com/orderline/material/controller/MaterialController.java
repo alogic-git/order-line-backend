@@ -2,10 +2,15 @@ package com.orderline.material.controller;
 
 import com.orderline.basic.model.dto.ApiResponseDto;
 import com.orderline.material.model.dto.MaterialDto;
+import com.orderline.material.model.entity.MaterialHistory;
 import com.orderline.material.service.MaterialService;
+import com.orderline.order.model.dto.OrderDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,4 +65,18 @@ public class MaterialController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "자재 발주 수정 내역 조회", notes = "해당 자재 발주의 수정 내역을 조회합니다.")
+    @GetMapping("{materialId}/history")
+    public MaterialDto.ResponseMaterialHistoryListDto getMaterialHistoryList(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "자재 id", required = true) @PathVariable Long materialId,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
+            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<MaterialDto.ResponseMaterialHistoryDto> materialHistoryDtoPage = materialService.getMaterialHistoryList(userId, materialId, pageable);
+
+        return MaterialDto.ResponseMaterialHistoryListDto.build(materialHistoryDtoPage, pageNum, pageSize);
+    }
 }

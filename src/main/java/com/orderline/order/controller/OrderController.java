@@ -94,4 +94,32 @@ public class OrderController {
 
         return MaterialDto.ResponseMaterialListDto.build(materialDtoPage, pageNum, pageSize);
     }
+
+    @ApiOperation(value = "발주 삭제", notes = "발주를 삭제합니다.")
+    @PostMapping("{orderId}")
+    public ResponseEntity<Void> deleteOrder(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId) {
+
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        orderService.deleteOrder(userId, orderId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "발주 수정 내역 조회", notes = "발주 수정 내역을 조회합니다.")
+    @GetMapping("{orderId}/history")
+    public OrderDto.ResponseOrderHistoryListDto getOrderHistoryList(
+            HttpServletRequest httpServletRequest,
+            @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
+            @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
+            @ApiParam(value = "페이지당 항목 수", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize) {
+
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<OrderDto.ResponseOrderHistoryDto> orderHistoryDtoPage = orderService.getOrderHistoryList(userId, orderId, pageable);
+
+        return OrderDto.ResponseOrderHistoryListDto.build(orderHistoryDtoPage, pageNum, pageSize);
+    }
+
+
 }

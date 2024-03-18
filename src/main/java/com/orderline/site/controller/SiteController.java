@@ -3,13 +3,10 @@ package com.orderline.site.controller;
 import com.orderline.basic.model.dto.ApiResponseDto;
 import com.orderline.site.model.dto.SiteDto;
 import com.orderline.site.service.SiteService;
+import com.orderline.user.model.dto.UserDto;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_NUM;
-import static com.orderline.basic.utils.Constants.DEFAULT_PAGE_SIZE;
 
 @Api(tags={"30.Site"})
 @RestController
@@ -54,7 +48,7 @@ public class SiteController {
 
     @ApiOperation(value = "현장 선택", notes = "현장을 선택합니다.")
     @PatchMapping("/{siteId}")
-    public SiteDto.ResponseSiteDto selectSite(
+    public UserDto.UserInfoDto selectSite(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "현장 id", required = true) @PathVariable Long siteId) {
 

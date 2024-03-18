@@ -2,11 +2,9 @@ package com.orderline.order.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.basic.utils.TimeFunction;
-import com.orderline.material.model.dto.ProductDto;
 import com.orderline.order.enums.OrderStatusEnum;
 import com.orderline.order.model.dto.OrderDto;
 import com.orderline.site.model.entity.Site;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -71,14 +69,6 @@ public class Order extends BaseTimeEntity {
 
     public void updateTotalPrice(int totalPrice){
         this.totalPrice = totalPrice;
-    }
-
-    public void updateAddress(String address){
-        this.address = address;
-    }
-
-    public void updateSpecifics(String specifics){
-        this.specifics = specifics;
     }
 
     public void updateOrder(OrderDto.RequestUpdateOrderDto requestOrderDto, Site site){
