@@ -61,14 +61,6 @@ public class Product extends BaseTimeEntity {
         this.deleteYn = true;
     }
 
-    public void updateName(String name){
-        this.name = name;
-    }
-
-    public void updateSpecifics(String specifics){
-        this.specifics = specifics;
-    }
-
     public void updateProduct(ProductDto.RequestCreateProductDto requestProductDto){
         this.name = requestProductDto.getName();
         this.companyName = requestProductDto.getCompanyName();

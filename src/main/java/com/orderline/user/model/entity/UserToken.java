@@ -34,11 +34,6 @@ public class UserToken extends BaseTimeEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public void createToken(String accessToken, String refreshToken){
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
-
     public void deleteToken(){
         this.deleteYn = true;
     }

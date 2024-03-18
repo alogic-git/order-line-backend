@@ -1,15 +1,14 @@
 package com.orderline.order.service;
 
 import com.orderline.basic.exception.NotFoundException;
-import com.orderline.basic.exception.UnauthorizedException;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.material.model.entity.Material;
+import com.orderline.material.repository.MaterialRepository;
+import com.orderline.material.service.MaterialService;
 import com.orderline.order.model.dto.OrderDto;
 import com.orderline.order.model.entity.Order;
 import com.orderline.order.model.entity.OrderHistory;
-import com.orderline.order.model.entity.OrderMaterial;
 import com.orderline.order.repository.OrderHistoryRepository;
-import com.orderline.order.repository.OrderMaterialRepository;
 import com.orderline.order.repository.OrderRepository;
 import com.orderline.site.model.entity.Site;
 import com.orderline.site.repository.SiteRepository;
@@ -42,11 +41,14 @@ public class OrderService {
     @Resource(name = "orderRepository")
     OrderRepository orderRepository;
 
-    @Resource(name = "orderMaterialRepository")
-    OrderMaterialRepository orderMaterialRepository;
+    @Resource(name = "materialRepository")
+    MaterialRepository materialRepository;
 
     @Resource(name = "orderHistoryRepository")
     OrderHistoryRepository orderHistoryRepository;
+
+    @Resource(name = "materialService")
+    MaterialService materialService;
 
     @Transactional
     public OrderDto.ResponseOrderDto createOrder(Long userId, Long siteId, OrderDto.RequestCreateOrderDto requestCreateOrderDto) {
@@ -60,6 +62,7 @@ public class OrderService {
         Order order = requestCreateOrderDto.toEntity(site);
 
         orderRepository.save(order);
+        createOrderHistory(order);
 
         return OrderDto.ResponseOrderDto.toDto(order);
     }
@@ -86,10 +89,7 @@ public class OrderService {
 
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("해당 발주를 찾을 수 없습니다."));
 
-        List<Material> materialList = orderMaterialRepository.findByOrder(order)
-                .stream()
-                .map(OrderMaterial::getMaterial)
-                .collect(Collectors.toList());
+        List<Material> materialList = materialRepository.findByOrder(order);
 
         List<MaterialDto.ResponseMaterialDto> materialDtoList = materialList.stream()
                 .map(material -> MaterialDto.ResponseMaterialDto.toDto(material, material.getProduct()))
@@ -104,16 +104,32 @@ public class OrderService {
 
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("발주를 찾을 수 없습니다."));
 
-        createOrderHistory(order);
-
         Site site = siteRepository.findById(requestOrderDto.getSiteId())
                 .orElseThrow(() -> new NotFoundException("현장을 찾을 수 없습니다."));
 
         order.updateOrder(requestOrderDto, site);
         ZonedDateTime expectedDt = calculateExpectedDt(order);
         order.updateExpectedDt(expectedDt);
-
+        createOrderHistory(order);
         return OrderDto.ResponseOrderDto.toDto(order, expectedDt);
+    }
+
+
+    @Transactional
+    public void deleteOrder(Long userId, Long orderId) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("해당 발주를 찾을 수 없습니다."));
+
+        List<Material> materialList = materialRepository.findByOrder(order);
+
+        for (Material material : materialList) {
+            material.deleteMaterial();
+            materialService.createMaterialHistory(material);
+        }
+
+        order.deleteOrder();
+        createOrderHistory(order);
     }
 
     public OrderDto.ResponseOrderDto getOrderDetail(Long userId, Long orderId) {
@@ -123,13 +139,27 @@ public class OrderService {
         return OrderDto.ResponseOrderDto.toDto(order);
     }
 
+    public Page<OrderDto.ResponseOrderHistoryDto> getOrderHistoryList(Long userId, Long orderId, Pageable pageable) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("해당 발주를 찾을 수 없습니다."));
+
+        List<OrderHistory> orderHistoryList = orderHistoryRepository.findByOrder(order);
+
+        List<OrderDto.ResponseOrderHistoryDto> orderHistoryDtoList = orderHistoryList.stream()
+                .map(OrderDto.ResponseOrderHistoryDto::toDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(orderHistoryDtoList, pageable, orderHistoryDtoList.size());
+    }
+
     public ZonedDateTime calculateExpectedDt(Order order) {
-        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByOrder(order);
+        List<Material> materialList = materialRepository.findByOrder(order);
 
         ZonedDateTime expectedDt = order.getRequestDt();
 
-        for (OrderMaterial orderMaterial : orderMaterialList) {
-            ZonedDateTime tmpTime = orderMaterial.getMaterial().getExpectedDt();
+        for (Material material : materialList) {
+            ZonedDateTime tmpTime = material.getExpectedDt();
             if (tmpTime.isAfter(expectedDt)) {
                 expectedDt = tmpTime;
             }
@@ -140,6 +170,7 @@ public class OrderService {
     public void createOrderHistory(Order order) {
         OrderHistory orderHistory = OrderHistory.builder()
                 .order(order)
+                .siteId(order.getSite().getId())
                 .address(order.getAddress())
                 .specifics(order.getSpecifics())
                 .managerName(order.getManagerName())

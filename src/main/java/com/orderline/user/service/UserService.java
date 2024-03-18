@@ -1,10 +1,8 @@
 package com.orderline.user.service;
 
-import com.orderline.basic.config.security.JwtTokenProvider;
 import com.orderline.basic.exception.InternalServerErrorException;
 import com.orderline.basic.exception.NotFoundException;
 import com.orderline.basic.service.AuthService;
-import com.orderline.basic.service.AwsS3Service;
 import com.orderline.user.model.dto.UserDto;
 import com.orderline.user.model.entity.User;
 import com.orderline.user.model.entity.UserToken;
@@ -14,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;

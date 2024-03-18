@@ -2,7 +2,6 @@ package com.orderline.order.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.order.enums.OrderStatusEnum;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +31,9 @@ public class OrderHistory extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @Column(name = "site_id")
+    private Long siteId;
 
     @Column(name = "address")
     private String address;

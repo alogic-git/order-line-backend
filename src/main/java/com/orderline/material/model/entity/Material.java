@@ -4,6 +4,7 @@ import com.orderline.basic.model.entity.BaseTimeEntity;
 import com.orderline.basic.utils.TimeFunction;
 import com.orderline.material.model.dto.MaterialDto;
 import com.orderline.order.enums.OrderStatusEnum;
+import com.orderline.order.model.entity.Order;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,6 +27,10 @@ public class Material extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -54,14 +59,6 @@ public class Material extends BaseTimeEntity {
 
     public void deleteMaterial(){
         this.deleteYn = true;
-    }
-
-    public void updateName(String name){
-        this.name = name;
-    }
-
-    public void updateSpecifics(String specifics){
-        this.specifics = specifics;
     }
 
     public void updateMaterial(MaterialDto.RequestUpdateMaterialDto requestMaterialDto, Product product){

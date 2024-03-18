@@ -10,10 +10,7 @@ import com.orderline.material.repository.MaterialHistoryRepository;
 import com.orderline.material.repository.MaterialRepository;
 import com.orderline.material.repository.ProductRepository;
 import com.orderline.order.model.entity.Order;
-import com.orderline.order.model.entity.OrderMaterial;
-import com.orderline.order.repository.OrderMaterialRepository;
 import com.orderline.order.repository.OrderRepository;
-import com.orderline.user.model.entity.User;
 import com.orderline.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,9 +30,6 @@ public class MaterialService {
 
     @Resource(name = "materialRepository")
     MaterialRepository materialRepository;
-
-    @Resource(name = "orderMaterialRepository")
-    OrderMaterialRepository orderMaterialRepository;
 
     @Resource(name = "orderRepository")
     OrderRepository orderRepository;
@@ -67,12 +61,7 @@ public class MaterialService {
         Product product = productRepository.findById(requestCreateMaterialDto.getProductId())
                 .orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
 
-        Material material = requestCreateMaterialDto.toEntity(product);
-
-        OrderMaterial orderMaterial = OrderMaterial.builder()
-                .order(order)
-                .material(material)
-                .build();
+        Material material = requestCreateMaterialDto.toEntity(order, product);
 
         ZonedDateTime expectedDt = calculateExpectedDt(order);
         order.updateExpectedDt(expectedDt);
@@ -80,10 +69,9 @@ public class MaterialService {
         int totalPrice = calculateTotalPrice(order);
         order.updateTotalPrice(totalPrice);
 
-        orderRepository.save(order);
-
         materialRepository.save(material);
-        orderMaterialRepository.save(orderMaterial);
+
+        createMaterialHistory(material);
 
         return MaterialDto.ResponseMaterialDto.toDto(material, product);
     }
@@ -95,9 +83,9 @@ public class MaterialService {
         Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
         Product product = productRepository.findById(material.getProduct().getId()).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
 
-        createMaterialHistory(material);
-
         material.updateMaterial(requestMaterialDto, product);
+
+        createMaterialHistory(material);
 
         return MaterialDto.ResponseMaterialDto.toDto(material, product);
     }
@@ -155,15 +143,25 @@ public class MaterialService {
 
         Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
 
-        createMaterialHistory(material);
-
-        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByMaterial(material);
-        orderMaterialList.forEach(OrderMaterial::deleteOrderMaterial);
-        orderMaterialRepository.saveAll(orderMaterialList);
-
         material.deleteMaterial();
-        materialRepository.save(material);
+        createMaterialHistory(material);
     }
+
+    public Page<MaterialDto.ResponseMaterialHistoryDto> getMaterialHistoryList(Long userId, Long materialId, Pageable pageable) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        Material material = materialRepository.findById(materialId).orElseThrow(() -> new NotFoundException("자재를 찾을 수 없습니다."));
+
+        List<MaterialHistory> materialHistoryList = materialHistoryRepository.findByMaterialId(material.getId());
+
+        List<MaterialDto.ResponseMaterialHistoryDto> materialHistoryDtoList = materialHistoryList.stream()
+                .map(MaterialDto.ResponseMaterialHistoryDto::toDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(materialHistoryDtoList, pageable, materialHistoryDtoList.size());
+
+    }
+
 
     public void deleteProduct(Long userId, Long productId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -175,24 +173,24 @@ public class MaterialService {
     }
 
     public int calculateTotalPrice(Order order) {
-        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByOrder(order);
+        List<Material> materialList = materialRepository.findByOrder(order);
 
         int totalPrice = 0;
 
-        for (OrderMaterial orderMaterial : orderMaterialList) {
-            totalPrice += orderMaterial.getMaterial().getTotalPrice();
+        for (Material material : materialList) {
+            totalPrice += material.getTotalPrice();
         }
 
         return totalPrice;
     }
 
     public ZonedDateTime calculateExpectedDt(Order order) {
-        List<OrderMaterial> orderMaterialList = orderMaterialRepository.findByOrder(order);
+        List<Material> materialList = materialRepository.findByOrder(order);
 
         ZonedDateTime expectedDt = order.getRequestDt();
 
-        for (OrderMaterial orderMaterial : orderMaterialList) {
-            ZonedDateTime tmpTime = orderMaterial.getMaterial().getExpectedDt();
+        for (Material material : materialList) {
+            ZonedDateTime tmpTime = material.getExpectedDt();
             if (tmpTime.isAfter(expectedDt)) {
                 expectedDt = tmpTime;
             }

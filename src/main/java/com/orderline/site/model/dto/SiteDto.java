@@ -1,9 +1,5 @@
 package com.orderline.site.model.dto;
 
-
-import com.orderline.basic.utils.TimeFunction;
-import com.orderline.order.enums.OrderStatusEnum;
-import com.orderline.order.model.entity.Order;
 import com.orderline.site.model.entity.ConstructionCompany;
 import com.orderline.site.model.entity.Site;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,9 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

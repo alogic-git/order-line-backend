@@ -54,22 +54,11 @@ public class User  extends BaseTimeEntity {
         this.lastLoginDt = ZonedDateTime.now(ZoneId.of("UTC"));
     }
 
-    public void deleteUser(){
-        this.deleteYn = true;
-    }
-
-    public void encodePassword(String password){
-        this.password = password;
-    }
-
     public void updatePassword(String password){
         this.password = password;
     }
 
-    public void updateUserPhone(String phone){ this.phone = phone; }
-
-    public void updateName (String name) { this.name = name; }
-    public void setSite(Site site) {
+    public void updateSite(Site site) {
         this.siteId = site.getId();
     }
 }
