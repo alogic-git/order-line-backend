@@ -26,9 +26,9 @@ public class SwaggerConfig {
   private static final String VERSION = "0.0.1";
   private static final String DESCRIPTION = "orderline api\n" +
             "sample user token: username = gobaebae, name = 고배배\n" +
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MDg5MDk4ODAsImV4cCI6MTcxNjY4NTg4MH0.11SA7JuYWHrfKs8Zw-FNFd73OAjq8b5jLQoA4rPxPZ4\n" +
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJzaXRlSWQiOjEsImlhdCI6MTcxMDQ4OTcxNywiZXhwIjoxNzE4MjY1NzE3fQ.sMBmTejV3VtnxO8zVU9MmEDywfOxyQ0XOwlgby3zcdM\n" +
             "sample admin token: username = admin, name = 관리자\n" +
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzA5MDEwNzk4LCJleHAiOjE3MTY3ODY3OTh9.xUlgkPBoUU3YBLEGtNRrS0Q8Hv2Zv7p9x4kxyMKXjAo";
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IkFETUlOIiwic2l0ZUlkIjo1LCJpYXQiOjE3MTA0OTAyNDIsImV4cCI6MTcxODI2NjI0Mn0.jt1sKEI2Ia5BDG0XGVzgd6iCchOLxTkFa9WjwHvOGA8";
   private static final String PACKAGE_NAME = "com.orderline";
 
   @Bean

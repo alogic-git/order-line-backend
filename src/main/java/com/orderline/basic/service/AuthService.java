@@ -45,7 +45,6 @@ public class AuthService {
         UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(refreshToken)
                 .orElseThrow(() -> new NotFoundException("refresh token이 존재하지 않습니다. 로그인을 다시 진행해주세요."));
         userToken.deleteToken();
-        userTokenRepository.save(userToken);
     }
 
     @Transactional
@@ -58,7 +57,6 @@ public class AuthService {
         if(isNull(userInfoDto)){
             throw new InternalServerErrorException("존재하지 않는 유저입니다.");
         }
-
         return createToken(userInfoDto);
     }
 

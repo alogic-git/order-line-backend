@@ -4,10 +4,9 @@ package com.orderline.order.model.dto;
 import com.orderline.basic.utils.TimeFunction;
 import com.orderline.order.enums.OrderStatusEnum;
 import com.orderline.order.model.entity.Order;
+import com.orderline.order.model.entity.OrderHistory;
 import com.orderline.site.model.entity.Site;
-import com.orderline.user.model.entity.User;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -142,7 +141,7 @@ public class OrderDto {
         @ApiModelProperty(value = "긴급 여부", example = "false")
         private Boolean emergencyYn;
 
-        @ApiModelProperty(value = "진행 상태", example = "COMPLETE")
+        @ApiModelProperty(value = "진행 상태", example = "COMPLETED")
         private OrderStatusEnum status;
 
         @ApiModelProperty(value = "발주일", example = "1709106929")
@@ -185,5 +184,82 @@ public class OrderDto {
         }
     }
 
+    @Getter
+    @Builder
+    public static class ResponseOrderHistoryDto {
+        @ApiModelProperty(value = "발주 ID", example = "1")
+        private Long orderId;
+
+        @ApiModelProperty(value = "현장 ID", example = "1")
+        private Long siteId;
+
+        @ApiModelProperty(value = "발주 주소", example = "서울시 강남구 역삼동 123-4")
+        private String address;
+
+        @ApiModelProperty(value = "특이사항", example = "발주 특이사항입니다.")
+        private String specifics;
+
+        @ApiModelProperty(value = "담당자명", example = "홍길동")
+        private String managerName;
+
+        @ApiModelProperty(value = "긴급 여부", example = "false")
+        private Boolean emergencyYn;
+
+        @ApiModelProperty(value = "진행 상태", example = "발주완료")
+        private OrderStatusEnum status;
+
+        @ApiModelProperty(value = "발주일", example = "1709106929")
+        private Long orderDt;
+
+        @ApiModelProperty(value = "배송 요청일", example = "1709106929")
+        private Long requestDt;
+
+        @ApiModelProperty(value = "배송 예정일", example = "1709106929")
+        private Long expectedDt;
+
+        public static ResponseOrderHistoryDto toDto(OrderHistory orderHistory) {
+            return ResponseOrderHistoryDto.builder()
+                    .orderId(orderHistory.getOrder().getId())
+                    .siteId(orderHistory.getSiteId())
+                    .address(orderHistory.getAddress())
+                    .specifics(orderHistory.getSpecifics())
+                    .managerName(orderHistory.getManagerName())
+                    .emergencyYn(orderHistory.getEmergencyYn())
+                    .status(orderHistory.getStatus())
+                    .orderDt(TimeFunction.toUnixTime(orderHistory.getOrderDt()))
+                    .requestDt(TimeFunction.toUnixTime(orderHistory.getRequestDt()))
+                    .expectedDt(TimeFunction.toUnixTime(orderHistory.getExpectedDt()))
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class ResponseOrderHistoryListDto {
+        @ApiModelProperty(value = "발주 내역 목록")
+        private List<ResponseOrderHistoryDto> results;
+
+        @ApiModelProperty(value = "현재 페이지")
+        private Integer currentPage;
+
+        @ApiModelProperty(value = "페이지당 항목 수")
+        private Integer maxResults;
+
+        @ApiModelProperty(value = "전체 페이지")
+        private Integer totalPages;
+
+        @ApiModelProperty(value = "전체 항목 수")
+        private Long totalElements;
+
+        public static ResponseOrderHistoryListDto build(Page<ResponseOrderHistoryDto> responseDtoPage, Integer currentPage, Integer maxResults) {
+            return ResponseOrderHistoryListDto.builder()
+                    .results(responseDtoPage.getContent())
+                    .maxResults(maxResults)
+                    .currentPage(currentPage)
+                    .totalPages(responseDtoPage.getTotalPages())
+                    .totalElements(responseDtoPage.getTotalElements())
+                    .build();
+        }
+    }
 
 }
