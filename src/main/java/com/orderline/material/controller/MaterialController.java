@@ -42,7 +42,7 @@ public class MaterialController {
         return ApiResponseDto.createdResponseEntity(createUri, responseCreateMaterialDto);
     }
 
-    @ApiOperation(value = "자재 발주 내역 수정")
+    @ApiOperation(value = "발주 자재 내역 수정")
     @PatchMapping("{materialId}/update")
     public MaterialDto.ResponseMaterialDto updateMaterial(
             HttpServletRequest httpServletRequest,
@@ -53,7 +53,7 @@ public class MaterialController {
         return materialService.updateMaterial(userId, materialId, requestMaterialDto);
     }
 
-    @ApiOperation(value = "자재 발주 내역 삭제")
+    @ApiOperation(value = "발주 자재 내역 삭제")
     @PatchMapping("{materialId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMaterial(
@@ -65,7 +65,7 @@ public class MaterialController {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "자재 발주 수정 내역 조회", notes = "해당 자재 발주의 수정 내역을 조회합니다.")
+    @ApiOperation(value = "발주 자재 수정 내역 조회", notes = "해당 자재 발주의 수정 내역을 조회합니다.")
     @GetMapping("{materialId}/history")
     public MaterialDto.ResponseMaterialHistoryListDto getMaterialHistoryList(
             HttpServletRequest httpServletRequest,
