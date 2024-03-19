@@ -43,7 +43,7 @@ public class MaterialController {
     }
 
     @ApiOperation(value = "발주 자재 내역 수정")
-    @PatchMapping("{materialId}/update")
+    @PatchMapping("{materialId}")
     public MaterialDto.ResponseMaterialDto updateMaterial(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "자재 id", required = true) @PathVariable Long materialId,
@@ -54,7 +54,7 @@ public class MaterialController {
     }
 
     @ApiOperation(value = "발주 자재 내역 삭제")
-    @PatchMapping("{materialId}")
+    @DeleteMapping("{materialId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMaterial(
             HttpServletRequest httpServletRequest,
