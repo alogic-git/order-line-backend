@@ -1,9 +1,8 @@
 package com.orderline.user.service;
 
-import com.orderline.basic.config.security.JwtTokenProvider;
 import com.orderline.basic.exception.InternalServerErrorException;
 import com.orderline.basic.exception.NotFoundException;
-import com.orderline.basic.service.AwsS3Service;
+import com.orderline.basic.service.AuthService;
 import com.orderline.user.model.dto.UserDto;
 import com.orderline.user.model.entity.User;
 import com.orderline.user.model.entity.UserToken;
@@ -13,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -29,47 +26,25 @@ public class UserService {
     @Resource(name = "userTokenRepository")
     UserTokenRepository userTokenRepository;
 
-    @Resource(name = "customUserDetailsService")
-    CustomUserDetailsService customUserDetailsService;
-
-    @Resource(name = "awsS3Service")
-    AwsS3Service awsS3Service;
-
-    @Resource(name = "jwtTokenProvider")
-    JwtTokenProvider jwtTokenProvider;
-
     @Resource(name = "passwordEncoder")
     PasswordEncoder passwordEncoder;
-    
-    
+
+    @Resource(name = "authService")
+    AuthService authService;
+
     @Transactional
     public UserDto.ResponseUserInfoWithAuthDto doSignIn(UserDto.UserInfoDto userInfoDto) {
 
-        Optional<User> userOptional = userRepository.findById(userInfoDto.getUserId());
-        if(!userOptional.isPresent()) return null;
+        Long userId =  userInfoDto.getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
 
-        UserDto.RoleDto userRoleDto = customUserDetailsService.getUserRoleById(userInfoDto.getUserId());
-        String accessToken = jwtTokenProvider.createAccessToken(String.valueOf(userInfoDto.getUserId()), userRoleDto);
-        String refreshToken = jwtTokenProvider.createRefreshToken();
-        Long expiresIn = jwtTokenProvider.getExpiresIn(accessToken);
-
-        User user = userOptional.get();
         user.updateLastLoginDt();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        UserToken userToken = UserToken.builder()
-                .user(user)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-        userTokenRepository.save(userToken);
+        UserDto.UserInfoDto savedUserInfoDto = UserDto.UserInfoDto.toDto(savedUser);
 
-        UserDto.ResponseJwtDto jwtDto = UserDto.ResponseJwtDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .expiresIn(expiresIn)
-                .build();
-        return UserDto.ResponseUserInfoWithAuthDto.toDto(userInfoDto, jwtDto);
+        return authService.createToken(savedUserInfoDto);
     }
 
     public UserDto.UserInfoDto getUserInfoByUsernameAndPassword(String username, String password) {

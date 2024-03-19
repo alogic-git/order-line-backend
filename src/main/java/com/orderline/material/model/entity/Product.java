@@ -1,16 +1,16 @@
-package com.orderline.order.model.entity;
+package com.orderline.material.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
+import com.orderline.basic.utils.TimeFunction;
 import com.orderline.material.enums.ProductStatusEnum;
-import com.orderline.material.model.entity.MaterialCompany;
-import com.orderline.order.enums.OrderStatusEnum;
+import com.orderline.material.model.dto.MaterialDto;
+import com.orderline.material.model.dto.ProductDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
 
 @DynamicUpdate
 @DynamicInsert    //null field 지워줌
@@ -27,9 +27,8 @@ public class Product extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private MaterialCompany materialCompany;
+    @Column(name = "company_name")
+    private String companyName;
 
     @Column(name = "name")
     private String name;
@@ -43,37 +42,34 @@ public class Product extends BaseTimeEntity {
     @Column(name = "available_stock")
     private int availableStock;
 
+    @Column(name = "color")
     private String color;
 
     @Column(name = "image_uri")
     private String imageUri;
 
+    @Column(name = "specifics")
     private String specifics;
-
-    private int quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatusEnum status;
 
     @Column(name = "model_number")
-    private int modelNumber;
-
-    @Column(name = "request_dt")
-    private ZonedDateTime requestDt;
-
-    @Column(name = "expected_dt")
-    private ZonedDateTime expectedDt;
+    private String modelNumber;
 
     public void deleteProduct(){
         this.deleteYn = true;
     }
 
-    public void updateName(String name){
-        this.name = name;
+    public void updateProduct(ProductDto.RequestCreateProductDto requestProductDto){
+        this.name = requestProductDto.getName();
+        this.companyName = requestProductDto.getCompanyName();
+        this.modelNumber = requestProductDto.getModelNumber();
+        this.unitPrice = requestProductDto.getUnitPrice();
+        this.specifics = requestProductDto.getSpecifics();
+        this.salePrice = requestProductDto.getSalePrice();
+        this.availableStock = requestProductDto.getAvailableStock();
+        this.color = requestProductDto.getColor();
+        this.imageUri = requestProductDto.getImageUri();
     }
-
-    public void updateSpecifics(String specifics){
-        this.specifics = specifics;
-    }
-
 }

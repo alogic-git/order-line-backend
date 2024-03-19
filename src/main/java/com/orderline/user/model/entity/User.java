@@ -1,6 +1,7 @@
 package com.orderline.user.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
+import com.orderline.site.model.entity.Site;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -46,24 +47,18 @@ public class User  extends BaseTimeEntity {
     @Column(name = "admin_yn")
     private Boolean adminYn;
 
+    @Column(name = "site_id")
+    private Long siteId;
+
     public void updateLastLoginDt(){
         this.lastLoginDt = ZonedDateTime.now(ZoneId.of("UTC"));
-    }
-
-    public void deleteUser(){
-        this.deleteYn = true;
-    }
-
-    public void encodePassword(String password){
-        this.password = password;
     }
 
     public void updatePassword(String password){
         this.password = password;
     }
 
-    public void updateUserPhone(String phone){ this.phone = phone; }
-
-    public void updateName (String name) { this.name = name; }
-
+    public void updateSite(Site site) {
+        this.siteId = site.getId();
+    }
 }

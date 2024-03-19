@@ -1,6 +1,8 @@
 package com.orderline.basic.service;
 
 import com.orderline.basic.config.security.JwtTokenProvider;
+import com.orderline.basic.exception.InternalServerErrorException;
+import com.orderline.basic.exception.NotFoundException;
 import com.orderline.user.model.dto.UserDto;
 import com.orderline.user.model.dto.UserTokenDto;
 import com.orderline.user.model.entity.UserToken;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+
+import static java.util.Objects.isNull;
 
 
 @Service
@@ -26,29 +30,44 @@ public class AuthService {
     @Resource(name = "customUserDetailsService")
     CustomUserDetailsService customUserDetailsService;
 
-    public UserTokenDto.UserTokenInfoDto getUserToken(String refreshToken) {
-        UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(refreshToken).orElse(null);
-        if (userToken == null) {
-            return null;
+    public UserTokenDto.UserTokenInfoDto getValidUserToken(String refreshToken) {
+        UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(refreshToken).orElseThrow(() -> new NotFoundException("refresh token이 존재하지 않습니다. 로그인을 다시 진행해주세요."));
+
+        if(!jwtTokenProvider.validateToken(userToken.getRefreshToken())) {
+            throw new InternalServerErrorException("입력하신 refresh token 이 유효하지 않습니다. 로그인을 다시 진행해주세요.");
         }
+
         return UserTokenDto.UserTokenInfoDto.toDto(userToken);
     }
 
     @Transactional
-    public Long deleteUserToken(UserTokenDto.UserTokenInfoDto userTokenDto) {
-        UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(userTokenDto.getRefreshToken()).orElse(null);
-        if (userToken == null) {
-            return null;
-        }
+    public void deleteUserToken(String refreshToken) {
+        UserToken userToken = userTokenRepository.findFirstByRefreshTokenOrderByIdDesc(refreshToken)
+                .orElseThrow(() -> new NotFoundException("refresh token이 존재하지 않습니다. 로그인을 다시 진행해주세요."));
         userToken.deleteToken();
-        return userTokenRepository.save(userToken).getId();
     }
 
     @Transactional
-    public UserDto.ResponseUserInfoWithAuthDto reissueJwt(UserDto.UserInfoDto userInfoDto, UserTokenDto.UserTokenInfoDto userTokenDto) {
+    public UserDto.ResponseUserInfoWithAuthDto reissueJwt(UserTokenDto.UserTokenInfoDto userTokenDto) {
 
-        UserDto.RoleDto userRoleDto = customUserDetailsService.getUserRoleById(userTokenDto.getUser().getUserId());
-        String newAccessToken = jwtTokenProvider.createAccessToken(String.valueOf(userTokenDto.getUser().getUserId()), userRoleDto);
+        //기존 토큰 삭제
+        deleteUserToken(userTokenDto.getRefreshToken());
+
+        UserDto.UserInfoDto userInfoDto = userTokenDto.getUser();
+        if(isNull(userInfoDto)){
+            throw new InternalServerErrorException("존재하지 않는 유저입니다.");
+        }
+        return createToken(userInfoDto);
+    }
+
+    public UserDto.ResponseUserInfoWithAuthDto createToken(final UserDto.UserInfoDto userInfoDto) {
+        Long userId = userInfoDto.getUserId();
+        Long siteId = null;
+        if(userInfoDto.getSiteId() != null){
+            siteId = userInfoDto.getSiteId();
+        }
+        UserDto.RoleDto roleDto = customUserDetailsService.getUserRoleById(userId);
+        String newAccessToken = jwtTokenProvider.createAccessToken(String.valueOf(userId), roleDto);
         String newRefreshToken = jwtTokenProvider.createRefreshToken();
         Long expiresIn = jwtTokenProvider.getExpiresIn(newAccessToken);
 
