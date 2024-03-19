@@ -27,6 +27,9 @@ public class UserDto {
 
         private String password;
 
+        @ApiModelProperty(value = "선택한 현장 ID")
+        private Long siteId;
+
         @ApiModelProperty(value = "유저 역할")
         private UserRoleEnum roleType;
     }
@@ -52,16 +55,14 @@ public class UserDto {
         private Long userId;
 
         @ApiModelProperty(value = "ID", example = "gobaebae")
-        @NotBlank(message = "Id를 입력해주세요.")
+        @NotBlank(message = "ID를 입력해주세요.")
         private String username;
-
-        private String password;
 
         @ApiModelProperty(value = "Name")
         private String name;
 
         @ApiModelProperty(value = "Phone")
-        @NotBlank(message = "Phone을 입력해주세요.")
+        @NotBlank(message = "전화번호를 입력해주세요.")
         private String phone;
 
         @ApiModelProperty(value = "Join Date")
@@ -70,8 +71,11 @@ public class UserDto {
         @ApiModelProperty(value = "Last Login Date")
         private ZonedDateTime lastLoginDt;
 
-        @ApiModelProperty(value = "운영자 여부")
+        @ApiModelProperty(value = "관리자 여부")
         private Boolean adminYn;
+
+        @ApiModelProperty(value = "현장 ID")
+        private Long siteId;
 
         public User toEntity(){
             return User.builder()
@@ -93,6 +97,7 @@ public class UserDto {
                     .joinDt(user.getJoinDt())
                     .lastLoginDt(user.getLastLoginDt())
                     .adminYn(user.getAdminYn())
+                    .siteId(user.getSiteId() == null ? null : user.getSiteId())
                     .build();
         }
     }
@@ -168,11 +173,8 @@ public class UserDto {
         @ApiModelProperty(value = "전화번호", example = "01030902825")
         private String phone;
 
-        @ApiModelProperty(value = "가입 일시")
-        private ZonedDateTime joinDt;
-
-        @ApiModelProperty(value = "최종 로그인 일시")
-        private ZonedDateTime lastLoginDt;
+        @ApiModelProperty(value = "관리자 여부")
+        private Boolean adminYn;
 
         public void encodePassword(String password){
             this.password = password;
@@ -183,6 +185,8 @@ public class UserDto {
                     .password(password)
                     .name(name)
                     .phone(phone)
+                    .adminYn(adminYn)
+                    .siteId(null)
                     .joinDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .lastLoginDt(ZonedDateTime.now(ZoneId.of("UTC")))
                     .build();

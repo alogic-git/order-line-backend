@@ -26,11 +26,6 @@ public class ConstructionCompany extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
-    private String address;
-
-    @Column(name = "manager_name")
-    private String managerName;
-
     public void deleteConstructionCompany(){
         this.deleteYn = true;
     }

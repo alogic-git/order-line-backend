@@ -1,7 +1,6 @@
 package com.orderline.site.model.entity;
 
 import com.orderline.basic.model.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
