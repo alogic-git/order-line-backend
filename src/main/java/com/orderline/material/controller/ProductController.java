@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "자재 등록 내역 수정")
-    @PatchMapping("admin/product/{productId}/update")
+    @PatchMapping("admin/product/{productId}")
     public ProductDto.ResponseProductDto updateProduct(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "자재 id", required = true, defaultValue = DEFAULT_ID) @PathVariable Long productId,
@@ -66,7 +66,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "자재 등록 내역 삭제")
-    @PatchMapping("admin/product/{productId}")
+    @DeleteMapping("admin/product/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteProduct(
             HttpServletRequest httpServletRequest,
