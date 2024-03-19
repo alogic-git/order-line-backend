@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 수정", notes = "발주를 수정합니다.")
-    @PatchMapping("{orderId}/update")
+    @PatchMapping("{orderId}")
     public OrderDto.ResponseOrderDto updateOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
@@ -96,7 +96,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 삭제", notes = "발주를 삭제합니다.")
-    @PatchMapping("{orderId}")
+    @DeleteMapping("{orderId}")
     public ResponseEntity<Void> deleteOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId) {
