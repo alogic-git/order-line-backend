@@ -36,7 +36,7 @@ public class SiteController {
     }
 
     @ApiOperation(value = "현장 목록 조회", notes = "현장 목록을 조회합니다.")
-    @GetMapping("/sites")
+    @GetMapping
     public SiteDto.ResponseSiteListDto getSiteList(
             HttpServletRequest httpServletRequest) {
 
@@ -47,7 +47,7 @@ public class SiteController {
     }
 
     @ApiOperation(value = "현장 선택", notes = "현장을 선택합니다.")
-    @PatchMapping("/{siteId}")
+    @PatchMapping("{siteId}")
     public UserDto.UserInfoDto selectSite(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "현장 id", required = true) @PathVariable Long siteId) {

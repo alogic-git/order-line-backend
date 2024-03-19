@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 목록 조회", notes = "발주 목록을 조회합니다.")
-    @GetMapping("orders")
+    @GetMapping
     public OrderDto.ResponseOrderListDto getOrderList(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "페이지 번호", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer pageNum,
@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 수정", notes = "발주를 수정합니다.")
-    @PatchMapping("{orderId}")
+    @PatchMapping("{orderId}/update")
     public OrderDto.ResponseOrderDto updateOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId,
@@ -96,7 +96,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "발주 삭제", notes = "발주를 삭제합니다.")
-    @PostMapping("{orderId}")
+    @PatchMapping("{orderId}")
     public ResponseEntity<Void> deleteOrder(
             HttpServletRequest httpServletRequest,
             @ApiParam(value = "발주 ID", required = true, defaultValue = DEFAULT_ID) @PathVariable Long orderId) {
