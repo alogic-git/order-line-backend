@@ -4,15 +4,22 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AwsS3Config {
+  
+  @Value("${aws.s3.access-key}")
+  private String AWS_S3_ACCESS_KEY;
 
-  private static final String AWS_S3_ACCESS_KEY = "AKIAQ3SPFWKTFI6KEK4F";
-  private static final String AWS_S3_SECRET_KEY = "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";
-  private static final String AWS_S3_REGION = "ap-northeast-2";
+  @Value("${aws.s3.secret-key}")
+  private String AWS_S3_SECRET_KEY;
+
+  @Value("${aws.s3.region}")
+  private String AWS_S3_REGION;
+
   @Bean
   public AmazonS3Client amazonS3Client() {
     BasicAWSCredentials awsCreeds = new BasicAWSCredentials(AWS_S3_ACCESS_KEY, AWS_S3_SECRET_KEY);
